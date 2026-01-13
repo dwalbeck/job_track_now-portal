@@ -132,12 +132,16 @@ const Personal = () => {
         state: '',
         zip: '',
         country: '',
+        login: '',
+        passwd: '',
         no_response_week: 4,
+        default_llm: 'gpt-4.1-mini',
         resume_extract_llm: 'gpt-4.1-mini',
         job_extract_llm: 'gpt-4.1-mini',
         rewrite_llm: 'gpt-4.1-mini',
         cover_llm: 'gpt-4.1-mini',
         company_llm: 'gpt-4.1-mini',
+        tools_llm: 'gpt-4.1-mini',
         openai_api_key: '',
         tinymce_api_key: '',
         convertapi_key: '',
@@ -185,11 +189,11 @@ const Personal = () => {
         openai_api_key: 'OpenAI API Key',
         tinymce_api_key: 'TinyMCE API Key',
         convertapi_key: 'ConvertAPI Key',
-        docx2html: 'Docx To HTML',
-        odt2html: 'Odt To HTML',
+        docx2html: 'DOCX To HTML',
+        odt2html: 'ODT To HTML',
         pdf2html: 'PDF To HTML',
-        html2docx: 'HTML To Docx',
-        html2odt: 'HTML To Odt',
+        html2docx: 'HTML To DOCX',
+        html2odt: 'HTML To ODT',
         html2pdf: 'HTML To PDF'
     };
 
@@ -315,7 +319,7 @@ const Personal = () => {
     };
 
     const isWideField = (fieldName) => {
-        return ['email', 'linkedin_url', 'github_url', 'website_url', 'portfolio_url', 'address_1', 'openai_api_key', 'tinymce_api_key', 'convertapi_key'].includes(fieldName);
+        return ['email', 'linkedin_url', 'github_url', 'website_url', 'portfolio_url', 'address_1', 'openai_api_key', 'tinymce_api_key', 'convertapi_key', 'login', 'passwd'].includes(fieldName);
     };
 
     const renderField = (fieldName, label) => {
