@@ -167,17 +167,21 @@ const Personal = () => {
         city: 'City',
         state: 'State/Province',
         zip: 'Zip Code',
-        country: 'Country'
+        country: 'Country',
+        login: 'Username',
+        passwd: 'Password'
     };
 
     // Settings fields (right column)
     const settingsFields = {
         no_response_week: 'Auto Status Change',
+        default_llm: 'Default LLM',
         resume_extract_llm: 'Resume Extract LLM',
         job_extract_llm: 'Job Extraction LLM',
         rewrite_llm: 'Resume Rewrite LLM',
         cover_llm: 'Cover Letter LLM',
         company_llm: 'Company Research LLM',
+        tools_llm: 'Tools LLM',
         openai_api_key: 'OpenAI API Key',
         tinymce_api_key: 'TinyMCE API Key',
         convertapi_key: 'ConvertAPI Key',
@@ -241,11 +245,13 @@ const Personal = () => {
             setPersonalData({
                 ...data,
                 no_response_week: data.no_response_week || 4,
+                default_llm: data.default_llm || 'gpt-4.1-mini',
                 resume_extract_llm: data.resume_extract_llm || 'gpt-4.1-mini',
                 job_extract_llm: data.job_extract_llm || 'gpt-4.1-mini',
                 rewrite_llm: data.rewrite_llm || 'gpt-4.1-mini',
                 cover_llm: data.cover_llm || 'gpt-4.1-mini',
                 company_llm: data.company_llm || 'gpt-4.1-mini',
+                tools_llm: data.tools_llm || 'gpt-4.1-mini',
                 openai_api_key: data.openai_api_key || '',
                 tinymce_api_key: data.tinymce_api_key || '',
                 convertapi_key: data.convertapi_key || '',
@@ -297,7 +303,7 @@ const Personal = () => {
     }
 
     const isLlmField = (fieldName) => {
-        return ['resume_extract_llm', 'job_extract_llm', 'rewrite_llm', 'cover_llm', 'company_llm'].includes(fieldName);
+        return ['default_llm', 'resume_extract_llm', 'job_extract_llm', 'rewrite_llm', 'cover_llm', 'company_llm', 'tools_llm'].includes(fieldName);
     };
 
     const isApiKeyField = (fieldName) => {
