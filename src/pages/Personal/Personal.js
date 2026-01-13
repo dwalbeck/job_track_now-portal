@@ -319,7 +319,7 @@ const Personal = () => {
     };
 
     const isWideField = (fieldName) => {
-        return ['email', 'linkedin_url', 'github_url', 'website_url', 'portfolio_url', 'address_1', 'openai_api_key', 'tinymce_api_key', 'convertapi_key'].includes(fieldName);
+        return ['email', 'linkedin_url', 'github_url', 'website_url', 'portfolio_url', 'address_1', 'openai_api_key', 'tinymce_api_key', 'convertapi_key', 'login', 'passwd'].includes(fieldName);
     };
 
     const renderField = (fieldName, label) => {
