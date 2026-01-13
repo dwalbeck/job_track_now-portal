@@ -167,7 +167,9 @@ const Personal = () => {
         city: 'City',
         state: 'State/Province',
         zip: 'Zip Code',
-        country: 'Country'
+        country: 'Country',
+        login: 'Username',
+        passwd: 'Password'
     };
 
     // Settings fields (right column)
