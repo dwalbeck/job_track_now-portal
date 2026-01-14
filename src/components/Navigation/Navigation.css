@@ -5,6 +5,8 @@
   padding: 20px 0;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  position: relative;
 }
 
 .nav-logo-container {
@@ -37,6 +39,7 @@
 .nav-container {
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .nav-item {
@@ -64,4 +67,32 @@
 
 .nav-item:hover.active {
   background-color: #2980b9;
+}
+
+.nav-logout-container {
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  margin-bottom: 18px;
+}
+
+.nav-logout-button {
+  padding: 12px 24px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.nav-logout-button:hover {
+  background-color: #c0392b;
+}
+
+.nav-logout-button:active {
+  background-color: #a93226;
 }

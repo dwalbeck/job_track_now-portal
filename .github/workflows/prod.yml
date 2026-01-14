@@ -1,0 +1,43 @@
+name: Job Track Now
+
+concurrency: production
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    container: node:20
+    steps:
+      - uses: actions/checkout@v6.0.1
+
+      - name: Make env file
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_REACT_APP_LOG_LEVEL: "DEBUG"
+          envkey_REACT_APP_LOG_FILE: "porta.log"
+          envkey_REACT_APP_ENABLE_CONSOLE_LOGGING: false
+          envkey_REACT_APP_API_BASE_URL: "http://api.jobtracknow.com"
+          envkey_REACT_APP_FRONTEND_BASE_URL: "https://jobtracknow.com"
+          envkey_REACT_APP_OAUTH_REDIRECT_CALLBACK: "https://jobtracknow.com/callback"
+          file_name: '.env'
+
+      - name: compile the code
+        run: |
+          npm install
+          npm run build
+
+      - name: copy files to web server
+        uses: appleboy/scp-action@v1
+        with:
+          host: "54.237.75.43"
+          username: "deploy"
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          port: "22"
+          source: "./build/"
+          target: "/var/www/jobtracknow/"
+

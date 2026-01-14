@@ -1,5 +1,6 @@
 import logger from '../utils/logger';
 import {API_BASE_URL} from '../config';
+import {getAccessToken} from '../utils/oauth';
 
 class ApiService {
     get baseURL() {
@@ -22,6 +23,12 @@ class ApiService {
         const headers = {};
         if (method !== 'GET' && method !== 'HEAD' && method !== 'DELETE') {
             headers['Content-Type'] = 'application/json';
+        }
+
+        // Add Authorization header if access token exists
+        const accessToken = getAccessToken();
+        if (accessToken) {
+            headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
         const config = {

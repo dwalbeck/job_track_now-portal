@@ -1,10 +1,12 @@
 import React from 'react';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {useJob} from '../../context/JobContext';
+import {clearAccessToken} from '../../utils/oauth';
 import './Navigation.css';
 
 const Navigation = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const {navigateToPage} = useJob();
 
     const menuItems = [
@@ -24,6 +26,13 @@ const Navigation = () => {
         navigateToPage(key);
     };
 
+    const handleLogout = () => {
+        // Clear access token from localStorage
+        clearAccessToken();
+        // Redirect to login page
+        navigate('/login');
+    };
+
     return (
         <nav className="navigation">
             <div className="nav-logo-container">
@@ -41,6 +50,11 @@ const Navigation = () => {
                         {item.label}
                     </Link>
                 ))}
+            </div>
+            <div className="nav-logout-container">
+                <button className="nav-logout-button" onClick={handleLogout}>
+                    Logout
+                </button>
             </div>
         </nav>
     );
