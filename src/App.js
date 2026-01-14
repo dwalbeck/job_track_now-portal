@@ -29,6 +29,9 @@ import JobAnalysis from './pages/JobAnalysis/JobAnalysis';
 import OptimizedResume from './pages/OptimizedResume/OptimizedResume';
 import CompanyResearch from './pages/CompanyResearch/CompanyResearch';
 import ViewCompanyReport from './pages/ViewCompanyReport/ViewCompanyReport';
+import Login from './pages/Login/Login';
+import Callback from './pages/Callback/Callback';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import logger from './utils/logger';
 import './styles/App.css';
 
@@ -41,36 +44,41 @@ const AppContent = () => {
                 <Navigation/>
                 <div className="main-content">
                     <Routes>
-                        <Route path="/" element={<Home/>}/>
-                        <Route path="/job-tracker" element={<JobTracker/>}/>
-                        <Route path="/job-details/:id" element={<JobDetails/>}/>
-                        <Route path="/job-form" element={<JobForm/>}/>
-                        <Route path="/job-form/:id" element={<JobForm/>}/>
-                        <Route path="/contacts" element={<Contacts/>}/>
-                        <Route path="/contact-details/:id" element={<ContactDetails/>}/>
-                        <Route path="/contact-form" element={<ContactForm/>}/>
-                        <Route path="/contact-form/:id" element={<ContactForm/>}/>
-                        <Route path="/calendar" element={<Calendar/>}/>
-                        <Route path="/calendar-form" element={<CalendarForm/>}/>
-                        <Route path="/calendar-form/:id" element={<CalendarForm/>}/>
-                        <Route path="/notes" element={<Notes/>}/>
-                        <Route path="/notes-form" element={<NotesForm/>}/>
-                        <Route path="/notes-form/:id" element={<NotesForm/>}/>
-                        <Route path="/documents" element={<Documents/>}/>
-                        <Route path="/resume" element={<Resume/>}/>
-                        <Route path="/resume-form" element={<ResumeForm/>}/>
-                        <Route path="/resume-form/:id" element={<ResumeForm/>}/>
-                        <Route path="/view-resume" element={<ViewResume/>}/>
-                        <Route path="/edit-resume" element={<EditResume/>}/>
-                        <Route path="/manually-edit-resume" element={<ManuallyEditResume/>}/>
-                        <Route path="/cover-letter" element={<CoverLetter/>}/>
-                        <Route path="/create-cover-letter" element={<CreateCoverLetter/>}/>
-                        <Route path="/personal" element={<Personal/>}/>
-                        <Route path="/tools" element={<Tools/>}/>
-                        <Route path="/job-analysis/:id" element={<JobAnalysis/>}/>
-                        <Route path="/optimized-resume/:id" element={<OptimizedResume/>}/>
-                        <Route path="/company-research" element={<CompanyResearch/>}/>
-                        <Route path="/company-report/:id" element={<ViewCompanyReport/>}/>
+                        {/* Public routes */}
+                        <Route path="/login" element={<Login/>}/>
+                        <Route path="/callback" element={<Callback/>}/>
+
+                        {/* Protected routes */}
+                        <Route path="/" element={<PrivateRoute><Home/></PrivateRoute>}/>
+                        <Route path="/job-tracker" element={<PrivateRoute><JobTracker/></PrivateRoute>}/>
+                        <Route path="/job-details/:id" element={<PrivateRoute><JobDetails/></PrivateRoute>}/>
+                        <Route path="/job-form" element={<PrivateRoute><JobForm/></PrivateRoute>}/>
+                        <Route path="/job-form/:id" element={<PrivateRoute><JobForm/></PrivateRoute>}/>
+                        <Route path="/contacts" element={<PrivateRoute><Contacts/></PrivateRoute>}/>
+                        <Route path="/contact-details/:id" element={<PrivateRoute><ContactDetails/></PrivateRoute>}/>
+                        <Route path="/contact-form" element={<PrivateRoute><ContactForm/></PrivateRoute>}/>
+                        <Route path="/contact-form/:id" element={<PrivateRoute><ContactForm/></PrivateRoute>}/>
+                        <Route path="/calendar" element={<PrivateRoute><Calendar/></PrivateRoute>}/>
+                        <Route path="/calendar-form" element={<PrivateRoute><CalendarForm/></PrivateRoute>}/>
+                        <Route path="/calendar-form/:id" element={<PrivateRoute><CalendarForm/></PrivateRoute>}/>
+                        <Route path="/notes" element={<PrivateRoute><Notes/></PrivateRoute>}/>
+                        <Route path="/notes-form" element={<PrivateRoute><NotesForm/></PrivateRoute>}/>
+                        <Route path="/notes-form/:id" element={<PrivateRoute><NotesForm/></PrivateRoute>}/>
+                        <Route path="/documents" element={<PrivateRoute><Documents/></PrivateRoute>}/>
+                        <Route path="/resume" element={<PrivateRoute><Resume/></PrivateRoute>}/>
+                        <Route path="/resume-form" element={<PrivateRoute><ResumeForm/></PrivateRoute>}/>
+                        <Route path="/resume-form/:id" element={<PrivateRoute><ResumeForm/></PrivateRoute>}/>
+                        <Route path="/view-resume" element={<PrivateRoute><ViewResume/></PrivateRoute>}/>
+                        <Route path="/edit-resume" element={<PrivateRoute><EditResume/></PrivateRoute>}/>
+                        <Route path="/manually-edit-resume" element={<PrivateRoute><ManuallyEditResume/></PrivateRoute>}/>
+                        <Route path="/cover-letter" element={<PrivateRoute><CoverLetter/></PrivateRoute>}/>
+                        <Route path="/create-cover-letter" element={<PrivateRoute><CreateCoverLetter/></PrivateRoute>}/>
+                        <Route path="/personal" element={<PrivateRoute><Personal/></PrivateRoute>}/>
+                        <Route path="/tools" element={<PrivateRoute><Tools/></PrivateRoute>}/>
+                        <Route path="/job-analysis/:id" element={<PrivateRoute><JobAnalysis/></PrivateRoute>}/>
+                        <Route path="/optimized-resume/:id" element={<PrivateRoute><OptimizedResume/></PrivateRoute>}/>
+                        <Route path="/company-research" element={<PrivateRoute><CompanyResearch/></PrivateRoute>}/>
+                        <Route path="/company-report/:id" element={<PrivateRoute><ViewCompanyReport/></PrivateRoute>}/>
                     </Routes>
                 </div>
 
