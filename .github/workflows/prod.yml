@@ -21,7 +21,7 @@ jobs:
           envkey_REACT_APP_LOG_LEVEL: "DEBUG"
           envkey_REACT_APP_LOG_FILE: "portal.log"
           envkey_REACT_APP_ENABLE_CONSOLE_LOGGING: false
-          envkey_REACT_APP_API_BASE_URL: "http://api.jobtracknow.net"
+          envkey_REACT_APP_API_BASE_URL: "https://api.jobtracknow.net"
           envkey_REACT_APP_FRONTEND_BASE_URL: "https://jobtracknow.net"
           envkey_REACT_APP_OAUTH_REDIRECT_CALLBACK: "https://jobtracknow.net/callback"
           file_name: '.env'
