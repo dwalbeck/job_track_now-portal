@@ -19,17 +19,21 @@ jobs:
         uses: SpicyPizza/create-envfile@v2.0
         with:
           envkey_REACT_APP_LOG_LEVEL: "DEBUG"
-          envkey_REACT_APP_LOG_FILE: "porta.log"
+          envkey_REACT_APP_LOG_FILE: "portal.log"
           envkey_REACT_APP_ENABLE_CONSOLE_LOGGING: false
-          envkey_REACT_APP_API_BASE_URL: "http://api.jobtracknow.com"
-          envkey_REACT_APP_FRONTEND_BASE_URL: "https://jobtracknow.com"
-          envkey_REACT_APP_OAUTH_REDIRECT_CALLBACK: "https://jobtracknow.com/callback"
+          envkey_REACT_APP_API_BASE_URL: "http://api.jobtracknow.net"
+          envkey_REACT_APP_FRONTEND_BASE_URL: "https://jobtracknow.net"
+          envkey_REACT_APP_OAUTH_REDIRECT_CALLBACK: "https://jobtracknow.net/callback"
           file_name: '.env'
 
+      - name: disable CI checks
+        run: echo "CI=false" >> $GITHUB_ENV
+
+      - name: install dependencies
+        run: npm install
+
       - name: compile the code
-        run: |
-          npm install
-          npm run build
+        run: npm run build
 
       - name: copy files to web server
         uses: appleboy/scp-action@v1

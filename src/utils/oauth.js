@@ -21,7 +21,7 @@ function base64URLEncode(array) {
  */
 export function generateCodeVerifier() {
     const array = new Uint8Array(32);
-    window.crypto.getRandomValues(array);
+    crypto.getRandomValues(array);
     return base64URLEncode(array);
 }
 
@@ -31,32 +31,10 @@ export function generateCodeVerifier() {
  * @returns {Promise<string>} Code challenge string
  */
 export async function generateCodeChallenge(verifier) {
-    // Check if crypto.subtle is available
-    if (!window.crypto) {
-        throw new Error('Web Crypto API not available: window.crypto is undefined. Please use HTTPS or localhost.');
-    }
-
-    if (!window.crypto.subtle) {
-        // Log more details for debugging
-        console.error('Crypto API status:', {
-            hasCrypto: !!window.crypto,
-            hasSubtle: !!window.crypto.subtle,
-            protocol: window.location.protocol,
-            hostname: window.location.hostname,
-            isSecureContext: window.isSecureContext
-        });
-        throw new Error('Web Crypto API not available: crypto.subtle is undefined. This requires HTTPS or localhost. Current context is not secure.');
-    }
-
-    try {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(verifier);
-        const hash = await window.crypto.subtle.digest('SHA-256', data);
-        return base64URLEncode(new Uint8Array(hash));
-    } catch (error) {
-        console.error('Error generating code challenge:', error);
-        throw new Error(`Failed to generate code challenge: ${error.message}`);
-    }
+    const encoder = new TextEncoder();
+    const data = encoder.encode(verifier);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    return base64URLEncode(new Uint8Array(hash));
 }
 
 /**
@@ -65,7 +43,7 @@ export async function generateCodeChallenge(verifier) {
  */
 export function generateRandomState() {
     const array = new Uint8Array(16);
-    window.crypto.getRandomValues(array);
+    crypto.getRandomValues(array);
     return base64URLEncode(array);
 }
 
