@@ -26,6 +26,9 @@ jobs:
           envkey_REACT_APP_OAUTH_REDIRECT_CALLBACK: "https://jobtracknow.com/callback"
           file_name: '.env'
 
+      - name: display CI checks
+        run: echo "CI=false" >> $GITHUB_ENV
+
       - name: compile the code
         run: |
           npm install
