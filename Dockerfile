@@ -23,10 +23,13 @@ RUN mkdir -p /var/www/jobtracker/build
 COPY --from=build /app/build /var/www/jobtracker/build
 
 # Copy nginx configuration
-COPY docker/portal.jobtracknow.com.conf /etc/nginx/conf.d/default.conf
+COPY docker/nginx/portal.jobtracknow.com.conf /etc/nginx/conf.d/
+COPY docker/nginx/portal.jobtracknow.com-ssl.conf /etc/nginx/conf.d/
+COPY docker/ssl/* /etc/nginx/ssl/
 
 # Expose ports
 EXPOSE 3000
+EXPOSE 443
 EXPOSE 80
 
 # Start nginx

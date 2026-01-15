@@ -18,11 +18,13 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o /tmp/nodesource_setup.sh
 
 # Copy package files
 COPY package*.json ./
-COPY docker/portal.jobtracknow.com-dev.conf /etc/nginx/sites-available/portal.jobtracknow.com.conf
+COPY docker/nginx/portal.jobtracknow.com-dev.conf /etc/nginx/sites-available/portal.jobtracknow.com.conf
+COPY docker/nginx/portal.jobtracknow.com-dev-ssl.conf /etc/nginx/sites-available/portal.jobtracknow.com-ssl.conf
 
 # Install all dependencies (including dev dependencies)
 RUN npm install && \
     ln -s /etc/nginx/sites-available/portal.jobtracknow.com.conf /etc/nginx/sites-enabled/portal.jobtracknow.com.conf && \
+    ln -s /etc/nginx/sites-available/portal.jobtracknow.com-ssl.conf /etc/nginx/sites-enabled/portal.jobtracknow.com-ssl.conf && \
     rm /etc/nginx/sites-enabled/default && \
     service nginx stop && \
     service nginx start
@@ -36,7 +38,9 @@ COPY docker-entrypoint.sh /docker-entrypoint.d/
 #RUN npm run start
 
 # Expose ports
-EXPOSE 80 3000
+EXPOSE 80
+EXPOSE 443
+EXPOSE 3000
 
 CMD ["npm", "run", "start"]
 #CMD ["nginx", "-g", "daemon off;"]
