@@ -38,7 +38,7 @@ jobs:
       - name: copy files to web server
         uses: appleboy/scp-action@v1
         with:
-          host: "54.208.82.135"
+          host: 18.210.17.136
           username: "deploy"
           key: ${{secrets.SSH_PRIVATE_KEY}}
           port: "22"
