@@ -1,17 +1,23 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {useJob} from '../../context/JobContext';
 import ExportMenu from '../../components/ExportMenu/ExportMenu';
 import apiService from '../../services/api';
 import './Contacts.css';
 
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const TARGET_ROW = 10; // The row position to scroll the found contact to
+
 const Contacts = () => {
     const [contacts, setContacts] = useState([]);
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
+    const [activeLetter, setActiveLetter] = useState(null);
     const {selectedJobId} = useJob();
     const navigate = useNavigate();
+    const tableContainerRef = useRef(null);
+    const tableBodyRef = useRef(null);
 
     useEffect(() => {
         fetchContacts();
@@ -57,6 +63,39 @@ const Contacts = () => {
 
     const clearSearch = () => {
         setSearchTerm('');
+    };
+
+    const handleLetterClick = (letter) => {
+        setActiveLetter(letter);
+
+        // Find the first contact starting with this letter (by first_name)
+        const contactIndex = filteredContacts.findIndex(contact => {
+            const firstChar = (contact.first_name || '').charAt(0).toUpperCase();
+            return firstChar === letter;
+        });
+
+        if (contactIndex === -1 || !tableContainerRef.current || !tableBodyRef.current) {
+            return;
+        }
+
+        // Get all table rows
+        const rows = tableBodyRef.current.querySelectorAll('tr');
+        if (rows.length === 0 || contactIndex >= rows.length) {
+            return;
+        }
+
+        const targetRow = rows[contactIndex];
+        const rowHeight = targetRow.offsetHeight;
+
+        // Calculate the scroll position to put the found row at the 10th position
+        // We want (TARGET_ROW - 1) rows above it
+        const rowsAbove = TARGET_ROW - 1;
+        const scrollPosition = targetRow.offsetTop - (rowsAbove * rowHeight);
+
+        tableContainerRef.current.scrollTo({
+            top: Math.max(0, scrollPosition),
+            behavior: 'smooth'
+        });
     };
 
     const handleExport = async () => {
@@ -116,53 +155,66 @@ const Contacts = () => {
             {loading ? (
                 <div className="loading">Loading contacts...</div>
             ) : (
-                <div className="contacts-table-container">
-                    <table className="contacts-table">
-                        <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Job Title</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Company</th>
-                            <th>LinkedIn</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {filteredContacts.map(contact => (
-                            <tr
-                                key={contact.contact_id}
-                                className="contact-row"
-                                onClick={() => handleContactClick(contact)}
+                <div className="contacts-table-wrapper">
+                    <div className="alphabet-index">
+                        {ALPHABET.map(letter => (
+                            <div
+                                key={letter}
+                                className={`alphabet-cell ${activeLetter === letter ? 'active' : ''}`}
+                                onClick={() => handleLetterClick(letter)}
                             >
-                                <td>{contact.first_name}</td>
-                                <td>{contact.last_name}</td>
-                                <td>{contact.job_title}</td>
-                                <td>{contact.email}</td>
-                                <td>{contact.phone}</td>
-                                <td>{contact.company}</td>
-                                <td>
-                                    {contact.linkedin && (
-                                        <a
-                                            href={contact.linkedin}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
-                                        >
-                                            linkedin
-                                        </a>
-                                    )}
-                                </td>
-                            </tr>
+                                {letter}
+                            </div>
                         ))}
-                        </tbody>
-                    </table>
-                    {filteredContacts.length === 0 && !loading && (
-                        <div className="no-contacts">
-                            {searchTerm ? 'No contacts match your search.' : 'No contacts found.'}
-                        </div>
-                    )}
+                    </div>
+                    <div className="contacts-table-container" ref={tableContainerRef}>
+                        <table className="contacts-table">
+                            <thead>
+                            <tr>
+                                <th className="first-name">First Name</th>
+                                <th>Last Name</th>
+                                <th>Job Title</th>
+                                <th>Email</th>
+                                <th className="phone">Phone</th>
+                                <th>Company</th>
+                                <th className="linkedin">LinkedIn</th>
+                            </tr>
+                            </thead>
+                            <tbody ref={tableBodyRef}>
+                            {filteredContacts.map(contact => (
+                                <tr
+                                    key={contact.contact_id}
+                                    className="contact-row"
+                                    onClick={() => handleContactClick(contact)}
+                                >
+                                    <td>{contact.first_name}</td>
+                                    <td>{contact.last_name}</td>
+                                    <td>{contact.job_title}</td>
+                                    <td>{contact.email}</td>
+                                    <td>{contact.phone}</td>
+                                    <td>{contact.company}</td>
+                                    <td>
+                                        {contact.linkedin && (
+                                            <a
+                                                href={contact.linkedin}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={(e) => e.stopPropagation()}
+                                            >
+                                                linkedin
+                                            </a>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                        {filteredContacts.length === 0 && !loading && (
+                            <div className="no-contacts">
+                                {searchTerm ? 'No contacts match your search.' : 'No contacts found.'}
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
         </div>

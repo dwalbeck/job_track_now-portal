@@ -1,11 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { generateCodeVerifier, generateCodeChallenge, generateRandomState, storeOAuthState } from '../../utils/oauth';
 import { API_BASE_URL, OAUTH_REDIRECT_CALLBACK } from '../../config';
+import apiService from '../../services/api';
 import './Login.css';
 
 const Login = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [noUsersExist, setNoUsersExist] = useState(false);
+
+    useEffect(() => {
+        // Check if any users exist
+        const checkUsers = async () => {
+            try {
+                const result = await apiService.checkUsersEmpty();
+                setNoUsersExist(result && result.empty === true);
+            } catch (err) {
+                console.error('Error checking users:', err);
+            }
+        };
+        checkUsers();
+    }, []);
 
     /**
      * Start OAuth2 Authorization Code Flow with PKCE
@@ -60,6 +77,18 @@ const Login = () => {
                 >
                     {loading ? 'Starting login...' : 'Login'}
                 </button>
+
+                {noUsersExist && (
+                    <div className="login-create-account">
+                        <p>No account yet?</p>
+                        <button
+                            className="create-account-button"
+                            onClick={() => navigate('/settings/user')}
+                        >
+                            Create Account
+                        </button>
+                    </div>
+                )}
 
                 <p className="login-info">
                     Secure authentication using OAuth2 with PKCE

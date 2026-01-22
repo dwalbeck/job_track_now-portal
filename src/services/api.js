@@ -303,6 +303,37 @@ class ApiService {
         });
     }
 
+    // ***** user ***************************************************************************
+    async getUser(userId) {
+        return this.request(`/v1/user?user_id=${userId}`);
+    }
+
+    async getUserByUsername(username) {
+        return this.request(`/v1/user/lookup?username=${encodeURIComponent(username)}`);
+    }
+
+    async saveUser(userData) {
+        return this.request('/v1/user', {
+            method: 'POST',
+            body: JSON.stringify(userData),
+        });
+    }
+
+    async getUserSetting(userId) {
+        return this.request(`/v1/user/setting?user_id=${userId}`);
+    }
+
+    async saveUserSetting(settingData) {
+        return this.request('/v1/user/setting', {
+            method: 'POST',
+            body: JSON.stringify(settingData),
+        });
+    }
+
+    async checkUsersEmpty() {
+        return this.request('/v1/user/empty');
+    }
+
     // ***** resume ***************************************************************************
     async getBaselineResumeList() {
         return this.request('/v1/resume/baseline/list');

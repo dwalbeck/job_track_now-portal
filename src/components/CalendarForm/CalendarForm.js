@@ -371,7 +371,10 @@ const CalendarForm = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <span className="calendar-icon">📅</span>
+                            <span
+                                className="calendar-icon"
+                                onClick={() => document.getElementById('start_date').showPicker()}
+                            >📅</span>
                         </div>
                     </div>
 
@@ -406,7 +409,10 @@ const CalendarForm = () => {
                                 onChange={handleChange}
                                 required
                             />
-                            <span className="calendar-icon">📅</span>
+                            <span
+                                className="calendar-icon"
+                                onClick={() => document.getElementById('end_date').showPicker()}
+                            >📅</span>
                         </div>
                     </div>
 

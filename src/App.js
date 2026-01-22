@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {JobProvider} from './context/JobContext';
 import {ReminderProvider, useReminder} from './context/ReminderContext';
 import Navigation from './components/Navigation/Navigation';
+import TopBar from './components/TopBar/TopBar';
 import ReminderAlert from './components/ReminderAlert/ReminderAlert';
 import Home from './pages/Home/Home';
 import JobTracker from './pages/JobTracker/JobTracker';
@@ -25,12 +26,16 @@ import CoverLetter from './pages/CoverLetter/CoverLetter';
 import CreateCoverLetter from './pages/CreateCoverLetter/CreateCoverLetter';
 import Personal from './pages/Personal/Personal';
 import Tools from './pages/Tools/Tools';
+import UserSettings from './pages/UserSettings/UserSettings';
+import GeneralSettings from './pages/GeneralSettings/GeneralSettings';
 import JobAnalysis from './pages/JobAnalysis/JobAnalysis';
 import OptimizedResume from './pages/OptimizedResume/OptimizedResume';
 import CompanyResearch from './pages/CompanyResearch/CompanyResearch';
 import ViewCompanyReport from './pages/ViewCompanyReport/ViewCompanyReport';
 import Login from './pages/Login/Login';
 import Callback from './pages/Callback/Callback';
+import Features from './pages/Features/Features';
+import Screenshots from './pages/Screenshots/Screenshots';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import logger from './utils/logger';
 import './styles/App.css';
@@ -42,14 +47,19 @@ const AppContent = () => {
         <Router>
             <div className="app">
                 <Navigation/>
-                <div className="main-content">
-                    <Routes>
+                <div className="app-right">
+                    <TopBar/>
+                    <div className="main-content">
+                        <Routes>
                         {/* Public routes */}
                         <Route path="/login" element={<Login/>}/>
                         <Route path="/callback" element={<Callback/>}/>
+                        <Route path="/" element={<Home/>}/>
+                        <Route path="/home/features" element={<Features/>}/>
+                        <Route path="/home/screenshots" element={<Screenshots/>}/>
+                        <Route path="/home/documentation" element={<Home/>}/>
 
                         {/* Protected routes */}
-                        <Route path="/" element={<PrivateRoute><Home/></PrivateRoute>}/>
                         <Route path="/job-tracker" element={<PrivateRoute><JobTracker/></PrivateRoute>}/>
                         <Route path="/job-details/:id" element={<PrivateRoute><JobDetails/></PrivateRoute>}/>
                         <Route path="/job-form" element={<PrivateRoute><JobForm/></PrivateRoute>}/>
@@ -79,7 +89,10 @@ const AppContent = () => {
                         <Route path="/optimized-resume/:id" element={<PrivateRoute><OptimizedResume/></PrivateRoute>}/>
                         <Route path="/company-research" element={<PrivateRoute><CompanyResearch/></PrivateRoute>}/>
                         <Route path="/company-report/:id" element={<PrivateRoute><ViewCompanyReport/></PrivateRoute>}/>
-                    </Routes>
+                        <Route path="/settings/user" element={<PrivateRoute><UserSettings/></PrivateRoute>}/>
+                        <Route path="/settings/general" element={<PrivateRoute><GeneralSettings/></PrivateRoute>}/>
+                        </Routes>
+                    </div>
                 </div>
 
                 {activeReminder && (

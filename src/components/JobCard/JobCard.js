@@ -5,6 +5,19 @@ import './JobCard.css';
 
 const JobCard = ({job, index, onClick}) => {
     /**
+     * Formats time from 24-hour to 12-hour format with am/pm
+     * @param {string} hours - Hours in 24-hour format
+     * @param {string} minutes - Minutes
+     * @returns {string} Formatted time like "2:30pm" or "10:00am"
+     */
+    const formatTime12Hour = (hours, minutes) => {
+        const hour = parseInt(hours, 10);
+        const suffix = hour >= 12 ? 'pm' : 'am';
+        const hour12 = hour % 12 || 12; // Convert 0 to 12 for midnight, and 13-23 to 1-11
+        return `${hour12}:${minutes}${suffix}`;
+    };
+
+    /**
      * Determines if the appointment is upcoming and formats the display text
      * @returns {string|null} Formatted appointment text or null if no upcoming appointment
      */
@@ -43,14 +56,14 @@ const JobCard = ({job, index, onClick}) => {
                     return null; // Time has passed
                 }
 
-                // Format time as HH:MM
-                return `appt at ${hours}:${minutes}`;
+                // Format time in 12-hour format with am/pm
+                return `appt ${formatTime12Hour(hours, minutes)}`;
             }
             // If no time specified, show as today's appointment
             return 'appt today';
         }
 
-        // Appointment is in the future - use the already parsed month and day
+        // Appointment is in the future - show date
         return `appt ${month}/${day}`;
     };
 

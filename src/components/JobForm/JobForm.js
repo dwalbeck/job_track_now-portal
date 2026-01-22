@@ -95,9 +95,9 @@ const JobForm = () => {
     }
 
     return (
-        <div className="job-form-container">
+        <div className="job-form-page">
             <div className="job-form-header">
-                <h1>{isEdit ? 'Edit Job' : 'Add New Job'}</h1>
+                <h1 className="page-title">{isEdit ? 'Edit Posting' : 'Add New Posting'}</h1>
             </div>
 
             {error && <div className="error-message">{error}</div>}
@@ -105,96 +105,51 @@ const JobForm = () => {
             <form onSubmit={handleSubmit} className="job-form">
                 <input type="hidden" name="job_id" value={formData.job_id}/>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="company">Company *</label>
-                        <input
-                            type="text"
-                            id="company"
-                            name="company"
-                            value={formData.company}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                <div className="form-columns">
+                    {/* Left Column */}
+                    <div className="form-column">
+                        <div className="form-row-inline">
+                            <label htmlFor="company">Company*</label>
+                            <input
+                                type="text"
+                                id="company"
+                                name="company"
+                                value={formData.company}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="job_title">Job Title *</label>
-                        <input
-                            type="text"
-                            id="job_title"
-                            name="job_title"
-                            value={formData.job_title}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                </div>
+                        <div className="form-row-inline">
+                            <label htmlFor="job_title">Job Title*</label>
+                            <input
+                                type="text"
+                                id="job_title"
+                                name="job_title"
+                                value={formData.job_title}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="salary">Salary</label>
-                        <input
-                            type="text"
-                            id="salary"
-                            name="salary"
-                            value={formData.salary}
-                            onChange={handleChange}
-                            placeholder="e.g., $70,000 - $90,000"
-                        />
-                    </div>
+                        <div className="form-row-inline">
+                            <label htmlFor="interest_level">Interest Level</label>
+                            <select
+                                id="interest_level"
+                                name="interest_level"
+                                value={formData.interest_level}
+                                onChange={handleChange}
+                            >
+                                {interestLevels.map(level => (
+                                    <option key={level} value={level}>
+                                        {level} - {level <= 3 ? 'low' : level <= 7 ? 'medium' : 'high'}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="location">Location</label>
-                        <input
-                            type="text"
-                            id="location"
-                            name="location"
-                            value={formData.location}
-                            onChange={handleChange}
-                            placeholder="e.g., San Francisco, CA"
-                        />
-                    </div>
-                </div>
-
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="interest_level">Interest Level</label>
-                        <select
-                            id="interest_level"
-                            name="interest_level"
-                            value={formData.interest_level}
-                            onChange={handleChange}
-                        >
-                            {interestLevels.map(level => (
-                                <option key={level} value={level}>
-                                    {level} - {level <= 3 ? 'Low' : level <= 7 ? 'Medium' : 'High'}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="job_status">Job Status</label>
-                        <select
-                            id="job_status"
-                            name="job_status"
-                            value={formData.job_status}
-                            onChange={handleChange}
-                        >
-                            {statusOptions.map(option => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-
-                <div className="form-row">
-                    <div className="form-group">
-                        <label htmlFor="date_applied">Date Applied</label>
-                        <div className="date-input-container">
+                        <div className="form-row-inline">
+                            <label htmlFor="date_applied">Date Applied</label>
                             <input
                                 type="date"
                                 id="date_applied"
@@ -202,12 +157,53 @@ const JobForm = () => {
                                 value={formData.date_applied}
                                 onChange={handleChange}
                             />
-                            <span className="calendar-icon">📅</span>
+                        </div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className="form-column">
+                        <div className="form-row-inline">
+                            <label htmlFor="salary">Salary</label>
+                            <input
+                                type="text"
+                                id="salary"
+                                name="salary"
+                                value={formData.salary}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-row-inline">
+                            <label htmlFor="location">Location</label>
+                            <input
+                                type="text"
+                                id="location"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-row-inline">
+                            <label htmlFor="job_status">Job Status</label>
+                            <select
+                                id="job_status"
+                                name="job_status"
+                                value={formData.job_status}
+                                onChange={handleChange}
+                            >
+                                {statusOptions.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <div className="form-group">
+                {/* Full width URL fields */}
+                <div className="form-row-inline form-row-full">
                     <label htmlFor="posting_url">Posting URL</label>
                     <input
                         type="url"
@@ -215,11 +211,10 @@ const JobForm = () => {
                         name="posting_url"
                         value={formData.posting_url}
                         onChange={handleChange}
-                        placeholder="https://..."
                     />
                 </div>
 
-                <div className="form-group">
+                <div className="form-row-inline form-row-full">
                     <label htmlFor="apply_url">Apply URL</label>
                     <input
                         type="url"
@@ -227,19 +222,17 @@ const JobForm = () => {
                         name="apply_url"
                         value={formData.apply_url}
                         onChange={handleChange}
-                        placeholder="https://..."
                     />
                 </div>
 
-                <div className="form-group">
+                {/* Job Description */}
+                <div className="form-group-description">
                     <label htmlFor="job_desc">Job Description</label>
                     <textarea
                         id="job_desc"
                         name="job_desc"
                         value={formData.job_desc}
                         onChange={handleChange}
-                        rows={36}
-                        placeholder="Enter the full job description..."
                     />
                 </div>
 
@@ -257,7 +250,7 @@ const JobForm = () => {
                         className="submit-button"
                         disabled={loading}
                     >
-                        {loading ? 'Saving...' : (isEdit ? 'Update Job' : 'Add Job')}
+                        {loading ? 'Saving...' : 'Submit'}
                     </button>
                 </div>
             </form>

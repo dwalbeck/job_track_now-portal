@@ -4,6 +4,46 @@
   flex-direction: column;
 }
 
+.contacts-table-wrapper {
+  flex: 1;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+}
+
+.alphabet-index {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin-top: 41px; /* Align with table body (header height) */
+}
+
+.alphabet-cell {
+  width: 24px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3498db;
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid white;
+  transition: background-color 0.15s, border-color 0.15s;
+  user-select: none;
+}
+
+.alphabet-cell:hover {
+  background-color: #5dade2;
+}
+
+.alphabet-cell.active {
+  background-color: white;
+  color: #333;
+  border: 1px solid #333;
+}
+
 .contacts-table-container {
   flex: 1;
   overflow-y: auto;
@@ -66,4 +106,16 @@
   text-align: center;
   color: #666;
   font-size: 16px;
+}
+
+.first-name {
+    min-width: 140px;
+}
+.phone {
+    min-width: 130px;
+    max-width: 130px;
+}
+.linkedin {
+    min-width: 86px;
+    max-width: 86px;
 }
