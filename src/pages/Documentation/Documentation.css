@@ -1,0 +1,213 @@
+.documentation-page {
+    padding: 20px;
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.documentation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #c2c2c2;
+    flex-shrink: 0;
+}
+
+.documentation-content {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Left sidebar with TOC and logo */
+.doc-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.doc-toc {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.toc-section {
+    margin-bottom: 4px;
+}
+
+.toc-item {
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background-color 0.15s, color 0.15s;
+    font-size: 13px;
+    color: #333;
+}
+
+.toc-parent {
+    font-weight: 600;
+}
+
+.toc-child {
+    padding-left: 20px;
+    font-weight: 400;
+    color: #555;
+}
+
+.toc-item:hover {
+    background-color: #f0f0f0;
+}
+
+.toc-item.active {
+    background-color: #3498db;
+    color: white;
+}
+
+.doc-logo {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+}
+
+.doc-logo img {
+    max-width: 160px;
+    height: auto;
+}
+
+/* Main content area */
+.doc-main {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 12px;
+    line-height: 1.6;
+}
+
+.doc-main section {
+    margin-bottom: 40px;
+}
+
+.doc-main h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3498db;
+}
+
+.doc-main h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.doc-main h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #444;
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.doc-main p {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 12px;
+}
+
+.doc-main ul {
+    margin: 0 0 16px 0;
+    padding-left: 24px;
+}
+
+.doc-main li {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.doc-main a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.doc-main a:hover {
+    text-decoration: underline;
+}
+
+.doc-main strong {
+    font-weight: 600;
+    color: #333;
+}
+
+.doc-main pre {
+    background-color: #2d3748;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+    overflow-x: auto;
+}
+
+.doc-main code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+
+.doc-main p code {
+    background-color: #f0f0f0;
+    color: #c7254e;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+}
+
+/* Scrollbar styling */
+.doc-toc::-webkit-scrollbar,
+.doc-main::-webkit-scrollbar {
+    width: 6px;
+}
+
+.doc-toc::-webkit-scrollbar-track,
+.doc-main::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.doc-toc::-webkit-scrollbar-thumb,
+.doc-main::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.doc-toc::-webkit-scrollbar-thumb:hover,
+.doc-main::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .documentation-content {
+        flex-direction: column;
+    }
+
+    .doc-sidebar {
+        width: 100%;
+        max-height: 200px;
+    }
+
+    .doc-logo {
+        display: none;
+    }
+}

@@ -36,6 +36,7 @@ import Login from './pages/Login/Login';
 import Callback from './pages/Callback/Callback';
 import Features from './pages/Features/Features';
 import Screenshots from './pages/Screenshots/Screenshots';
+import Documentation from './pages/Documentation/Documentation';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import logger from './utils/logger';
 import './styles/App.css';
@@ -57,7 +58,7 @@ const AppContent = () => {
                         <Route path="/" element={<Home/>}/>
                         <Route path="/home/features" element={<Features/>}/>
                         <Route path="/home/screenshots" element={<Screenshots/>}/>
-                        <Route path="/home/documentation" element={<Home/>}/>
+                        <Route path="/home/documentation" element={<Documentation/>}/>
 
                         {/* Protected routes */}
                         <Route path="/job-tracker" element={<PrivateRoute><JobTracker/></PrivateRoute>}/>
