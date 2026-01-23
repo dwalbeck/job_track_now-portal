@@ -25,9 +25,8 @@
   border: 1px solid #ddd;
 }
 
-.form-row {
+.resume-form-row {
   display: flex;
-  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -56,8 +55,8 @@
 }
 
 .browse-button {
-  padding: 8px 20px;
-  background-color: #4CAF50;
+  padding: 8px 16px;
+  background-color: #3498db;
   color: white;
   border: none;
   border-radius: 6px;
@@ -68,7 +67,7 @@
 }
 
 .browse-button:hover {
-  background-color: #45a049;
+  background-color: #2980b9;
 }
 
 .form-select {

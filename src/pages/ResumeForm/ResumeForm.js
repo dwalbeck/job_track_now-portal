@@ -234,7 +234,7 @@ const ResumeForm = () => {
             <div className="resume-form-container">
                 {/* Left Side - Form */}
                 <div className="resume-form-left">
-                    <div className="form-row">
+                    <div className="resume-form-row">
                         <label className="form-label">File Upload</label>
                         <div className="file-upload-wrapper">
                             <input
@@ -256,7 +256,7 @@ const ResumeForm = () => {
                         </div>
                     </div>
 
-                    <div className="form-row">
+                    <div className="resume-form-row">
                         <label className="form-label">For Job</label>
                         <select
                             className="form-select"
@@ -275,7 +275,7 @@ const ResumeForm = () => {
 
                     {!selectedJob && (
                         <>
-                            <div className="form-row">
+                            <div className="resume-form-row">
                                 <label className="form-label">Resume Title</label>
                                 <input
                                     type="text"
@@ -286,7 +286,7 @@ const ResumeForm = () => {
                                 />
                             </div>
 
-                            <div className="form-row">
+                            <div className="resume-form-row">
                                 <label className="form-label">Baseline</label>
                                 <input
                                     type="checkbox"
@@ -298,7 +298,7 @@ const ResumeForm = () => {
                         </>
                     )}
 
-                    <div className="form-row">
+                    <div className="resume-form-row">
                         <label className="form-label">Default</label>
                         <input
                             type="checkbox"
