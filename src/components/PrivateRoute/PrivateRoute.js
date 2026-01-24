@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { isAuthenticated } from '../../utils/oauth';
 import apiService from '../../services/api';
@@ -21,37 +21,53 @@ const PrivateRoute = ({ children }) => {
     const [checking, setChecking] = useState(true);
     const [allowAccess, setAllowAccess] = useState(false);
 
-    useEffect(() => {
-        const checkAccess = async () => {
-            // If already authenticated, allow access
-            if (isAuthenticated()) {
-                setAllowAccess(true);
-                setChecking(false);
-                return;
-            }
+    const checkAccess = useCallback(async () => {
+        setChecking(true);
 
-            // Special case: check if /settings/user should be accessible for first user creation
-            if (location.pathname === '/settings/user') {
-                try {
-                    const result = await apiService.checkUsersEmpty();
-                    if (result && result.empty === true) {
-                        // No users exist, allow access to create first user
-                        setAllowAccess(true);
-                        setChecking(false);
-                        return;
-                    }
-                } catch (error) {
-                    console.error('Error checking users empty:', error);
-                }
-            }
-
-            // Not authenticated and not a special case
-            setAllowAccess(false);
+        // If already authenticated, allow access
+        if (isAuthenticated()) {
+            setAllowAccess(true);
             setChecking(false);
+            return;
+        }
+
+        // Special case: check if /settings/user should be accessible for first user creation
+        if (location.pathname === '/settings/user') {
+            try {
+                const result = await apiService.checkUsersEmpty();
+                if (result && result.empty === true) {
+                    // No users exist, allow access to create first user
+                    setAllowAccess(true);
+                    setChecking(false);
+                    return;
+                }
+            } catch (error) {
+                console.error('Error checking users empty:', error);
+            }
+        }
+
+        // Not authenticated and not a special case
+        setAllowAccess(false);
+        setChecking(false);
+    }, [location.pathname]);
+
+    // Check access on mount and when location changes
+    useEffect(() => {
+        checkAccess();
+    }, [checkAccess]);
+
+    // Also check on window focus (user returns to tab)
+    useEffect(() => {
+        const handleFocus = () => {
+            // Re-check authentication when user returns to the tab
+            if (!isAuthenticated()) {
+                setAllowAccess(false);
+            }
         };
 
-        checkAccess();
-    }, [location.pathname]);
+        window.addEventListener('focus', handleFocus);
+        return () => window.removeEventListener('focus', handleFocus);
+    }, []);
 
     // Show nothing while checking (prevents flash of login page)
     if (checking) {

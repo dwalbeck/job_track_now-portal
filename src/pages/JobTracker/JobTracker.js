@@ -26,7 +26,7 @@ const JobTracker = () => {
 
     useEffect(() => {
         logger.logPageView('Job Posting', '/job-tracker');
-        fetchPersonalSettings();
+        fetchUserSettings();
     }, []);
 
     useEffect(() => {
@@ -35,6 +35,17 @@ const JobTracker = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [noResponseWeeks]);
+
+    const fetchUserSettings = async () => {
+        try {
+            const settings = await apiService.getCurrentUserSettings();
+            setNoResponseWeeks(settings.no_response_week || 6);
+        } catch (error) {
+            console.error('Error fetching user settings:', error);
+            // Default to 6 weeks if settings can't be fetched
+            setNoResponseWeeks(6);
+        }
+    };
 
     useEffect(() => {
         if (searchTerm) {
@@ -46,15 +57,6 @@ const JobTracker = () => {
             setFilteredJobs(jobs);
         }
     }, [searchTerm, jobs]);
-
-    const fetchPersonalSettings = async () => {
-        try {
-            const personalInfo = await apiService.getPersonalInfo();
-            setNoResponseWeeks(personalInfo.no_response_week);
-        } catch (error) {
-            console.error('Error fetching personal settings:', error);
-        }
-    };
 
     const isJobOlderThanThreshold = (lastContact, weeks) => {
         if (!lastContact || !weeks) return false;

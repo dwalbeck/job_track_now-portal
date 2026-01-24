@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useState, useEffect, useCallback} from 'react';
 import apiService from '../services/api';
+import {isAuthenticated} from '../utils/oauth';
 
 const ReminderContext = createContext();
 
@@ -16,8 +17,14 @@ export const ReminderProvider = ({children}) => {
     const [activeReminder, setActiveReminder] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Fetch today's reminders
+    // Fetch today's reminders (only if authenticated)
     const fetchTodayReminders = useCallback(async () => {
+        // Don't fetch if not authenticated
+        if (!isAuthenticated()) {
+            setReminders([]);
+            return;
+        }
+
         try {
             setLoading(true);
             const today = new Date().toISOString().split('T')[0];

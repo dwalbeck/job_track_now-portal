@@ -108,6 +108,11 @@ class PortalLogger {
         this.log('WARNING', message, context);
     }
 
+    // Alias for warning (common naming convention)
+    warn(message, context = {}) {
+        this.log('WARNING', message, context);
+    }
+
     error(message, context = {}) {
         this.log('ERROR', message, context);
     }

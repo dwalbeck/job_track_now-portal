@@ -45,15 +45,8 @@ const ViewResume = () => {
 
             const {file} = convertResult;
 
-            // Get personal info for custom filename
-            const personalInfo = await apiService.getPersonalInfo();
-            const firstName = personalInfo.first_name || 'resume';
-            const lastName = personalInfo.last_name || '';
-
-            // Create standardized filename: resume-first_name_last_name.ext
-            const downloadFileName = lastName
-                ? `resume-${firstName}_${lastName}.${format}`.toLowerCase().replace(/ /g, '_')
-                : `resume-${firstName}.${format}`.toLowerCase().replace(/ /g, '_');
+            // Create filename from the generated file
+            const downloadFileName = `resume.${format}`;
 
             // Download the file
             const downloadUrl = `${API_BASE_URL}/v1/file/download/resume/${file}`;
@@ -97,23 +90,9 @@ const ViewResume = () => {
         });
     };
 
-    const handleEditClick = async () => {
-        try {
-            // Check if TinyMCE API key is configured
-            const personalInfo = await apiService.getPersonalInfo();
-            const hasTinyMCEKey = personalInfo.tinymce_api_key && personalInfo.tinymce_api_key.trim() !== '';
-
-            if (hasTinyMCEKey) {
-                // Navigate to ManuallyEditResume page with TinyMCE
-                navigate(`/manually-edit-resume?resume_id=${resumeId}&job_id=${jobId || ''}`);
-            } else {
-                // Navigate to EditResume page for manual HTML editing
-                navigate(`/edit-resume?resume_id=${resumeId}&job_id=${jobId || ''}`);
-            }
-        } catch (error) {
-            // Fallback to manual editing if there's an error
-            navigate(`/edit-resume?resume_id=${resumeId}&job_id=${jobId || ''}`);
-        }
+    const handleEditClick = () => {
+        // Navigate to EditResume page for manual HTML editing
+        navigate(`/edit-resume?resume_id=${resumeId}&job_id=${jobId || ''}`);
     };
 
     const renderKeywords = () => {

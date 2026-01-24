@@ -64,11 +64,7 @@ const CoverLetter = () => {
             const convertResponse = await apiService.convertLetter(coverId, 'docx');
             const serverFileName = convertResponse.file_name;
 
-            // Get personal info for custom filename
-            const personalInfo = await apiService.getPersonalInfo();
-            const firstName = personalInfo.first_name || 'cover';
-            const lastName = personalInfo.last_name || 'letter';
-            const downloadFileName = `${firstName}_${lastName}-cover_letter.docx`.toLowerCase().replace(/ /g, '_');
+            const downloadFileName = 'cover_letter.docx';
 
             // Download the file with custom filename
             const fileUrl = `${apiService.baseURL}/v1/files/cover_letters/${serverFileName}`;

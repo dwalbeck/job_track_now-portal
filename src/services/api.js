@@ -1,10 +1,22 @@
 import logger from '../utils/logger';
 import {API_BASE_URL} from '../config';
-import {getAccessToken} from '../utils/oauth';
+import {getAccessToken, clearAccessToken, isTokenExpired, getCurrentUserId} from '../utils/oauth';
 
 class ApiService {
     get baseURL() {
         return API_BASE_URL;
+    }
+
+    /**
+     * Handle authentication failure - clear token and redirect to login
+     */
+    handleAuthFailure() {
+        logger.warning('Authentication failed - clearing token and redirecting to login');
+        clearAccessToken();
+        // Only redirect if not already on login page (prevents infinite loop)
+        if (!window.location.pathname.startsWith('/login')) {
+            window.location.href = '/login';
+        }
     }
 
     async request(endpoint, options = {}) {
@@ -25,9 +37,16 @@ class ApiService {
             headers['Content-Type'] = 'application/json';
         }
 
-        // Add Authorization header if access token exists
+        // Add Authorization header if access token exists and is not expired
         const accessToken = getAccessToken();
         if (accessToken) {
+            // Check if token is expired before making the request
+            if (isTokenExpired(accessToken)) {
+                logger.warning('Token expired before API request', { endpoint });
+                clearTimeout(timeoutId);
+                this.handleAuthFailure();
+                return Promise.reject(new Error('Token expired'));
+            }
             headers['Authorization'] = `Bearer ${accessToken}`;
         }
 
@@ -58,6 +77,16 @@ class ApiService {
                 logger.logAPIResponse(method, endpoint, response.status, duration);
             }
 
+            // Handle 401 Unauthorized - token is invalid or expired
+            if (response.status === 401) {
+                logger.warning('Received 401 Unauthorized response', { endpoint, method });
+                this.handleAuthFailure();
+                const error = new Error('Unauthorized - session expired');
+                error.status = 401;
+                error.isAuthError = true;
+                throw error;
+            }
+
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
                 const errorMessage = errorData.detail || `HTTP error! status: ${response.status}`;
@@ -69,6 +98,12 @@ class ApiService {
             return await response.json();
         } catch (error) {
             clearTimeout(timeoutId); // Clear timeout on error
+
+            // Don't re-process auth errors (already handled above)
+            if (error.isAuthError) {
+                throw error;
+            }
+
             const duration = performance.now() - startTime;
 
             // Handle timeout errors more clearly
@@ -291,18 +326,6 @@ class ApiService {
         });
     }
 
-    // ***** personal ***************************************************************************
-    async getPersonalInfo() {
-        return this.request('/v1/personal');
-    }
-
-    async savePersonalInfo(personalData) {
-        return this.request('/v1/personal', {
-            method: 'POST',
-            body: JSON.stringify(personalData),
-        });
-    }
-
     // ***** user ***************************************************************************
     async getUser(userId) {
         return this.request(`/v1/user?user_id=${userId}`);
@@ -320,6 +343,15 @@ class ApiService {
     }
 
     async getUserSetting(userId) {
+        return this.request(`/v1/user/setting?user_id=${userId}`);
+    }
+
+    async getCurrentUserSettings() {
+        // Get user_id from JWT token and call the existing endpoint
+        const userId = getCurrentUserId();
+        if (!userId) {
+            throw new Error('Not authenticated');
+        }
         return this.request(`/v1/user/setting?user_id=${userId}`);
     }
 
@@ -341,6 +373,23 @@ class ApiService {
 
     async getBaselineResumes() {
         return this.request('/v1/resume/baseline');
+    }
+
+    async getJobResumes() {
+        return this.request('/v1/resume/job');
+    }
+
+    async cloneResume(resumeId) {
+        return this.request('/v1/resume/clone', {
+            method: 'POST',
+            body: JSON.stringify({ resume_id: resumeId }),
+        });
+    }
+
+    async deleteResume(resumeId) {
+        return this.request(`/v1/resume?resume_id=${resumeId}`, {
+            method: 'DELETE',
+        });
     }
 
     async getResume(resumeId) {

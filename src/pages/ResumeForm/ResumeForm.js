@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
 import apiService from '../../services/api';
 import {API_BASE_URL} from '../../config';
+import {getAccessToken} from '../../utils/oauth';
 import './ResumeForm.css';
 
 const ResumeForm = () => {
@@ -131,9 +132,16 @@ const ResumeForm = () => {
                 formData.append('resume_id', resumeId);
             }
 
-            //const resumeResponse = await apiService.updateResume(formData);
+            // Build headers with auth token for FormData upload
+            const headers = {};
+            const accessToken = getAccessToken();
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+
             const resumeResponse = await fetch(`${API_BASE_URL}/v1/resume`, {
                 method: 'POST',
+                headers,
                 body: formData,
             });
             if (!resumeResponse.ok) {

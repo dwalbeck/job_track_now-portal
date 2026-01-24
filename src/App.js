@@ -24,7 +24,6 @@ import EditResume from './pages/EditResume/EditResume';
 import ManuallyEditResume from './pages/ManuallyEditResume/ManuallyEditResume';
 import CoverLetter from './pages/CoverLetter/CoverLetter';
 import CreateCoverLetter from './pages/CreateCoverLetter/CreateCoverLetter';
-import Personal from './pages/Personal/Personal';
 import Tools from './pages/Tools/Tools';
 import UserSettings from './pages/UserSettings/UserSettings';
 import GeneralSettings from './pages/GeneralSettings/GeneralSettings';
@@ -39,6 +38,7 @@ import Screenshots from './pages/Screenshots/Screenshots';
 import Documentation from './pages/Documentation/Documentation';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import logger from './utils/logger';
+import {getAccessToken, isTokenExpired, clearAccessToken} from './utils/oauth';
 import './styles/App.css';
 
 const AppContent = () => {
@@ -84,7 +84,6 @@ const AppContent = () => {
                         <Route path="/manually-edit-resume" element={<PrivateRoute><ManuallyEditResume/></PrivateRoute>}/>
                         <Route path="/cover-letter" element={<PrivateRoute><CoverLetter/></PrivateRoute>}/>
                         <Route path="/create-cover-letter" element={<PrivateRoute><CreateCoverLetter/></PrivateRoute>}/>
-                        <Route path="/personal" element={<PrivateRoute><Personal/></PrivateRoute>}/>
                         <Route path="/tools" element={<PrivateRoute><Tools/></PrivateRoute>}/>
                         <Route path="/job-analysis/:id" element={<PrivateRoute><JobAnalysis/></PrivateRoute>}/>
                         <Route path="/optimized-resume/:id" element={<PrivateRoute><OptimizedResume/></PrivateRoute>}/>
@@ -129,9 +128,24 @@ function App() {
         window.addEventListener('error', handleError);
         window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
+        // Periodic token expiration check (every 60 seconds)
+        // This handles the case where user is idle and token expires
+        const tokenCheckInterval = setInterval(() => {
+            const token = getAccessToken();
+            if (token && isTokenExpired(token)) {
+                logger.warning('Token expired during idle - redirecting to login');
+                clearAccessToken();
+                // Only redirect if not already on login page
+                if (!window.location.pathname.startsWith('/login')) {
+                    window.location.href = '/login';
+                }
+            }
+        }, 60000); // Check every 60 seconds
+
         return () => {
             window.removeEventListener('error', handleError);
             window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+            clearInterval(tokenCheckInterval);
         };
     }, []);
 

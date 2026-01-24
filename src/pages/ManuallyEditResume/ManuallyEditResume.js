@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {Editor} from '@tinymce/tinymce-react';
 import apiService from '../../services/api';
+import {TINYMCE_API_KEY} from '../../config';
 import './ManuallyEditResume.css';
 
 const ManuallyEditResume = () => {
@@ -15,7 +16,7 @@ const ManuallyEditResume = () => {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
     const [initialContent, setInitialContent] = useState('');
-    const [tinyMceApiKey, setTinyMceApiKey] = useState('');
+    const tinyMceApiKey = TINYMCE_API_KEY;
 
     useEffect(() => {
         if (resumeId) {
@@ -27,10 +28,6 @@ const ManuallyEditResume = () => {
     const fetchResumeContent = async () => {
         try {
             setLoading(true);
-
-            // Get TinyMCE API key from personal settings
-            const personalInfo = await apiService.getPersonalInfo();
-            setTinyMceApiKey(personalInfo.tinymce_api_key || '');
 
             const data = await apiService.getResumeDetail(resumeId);
 

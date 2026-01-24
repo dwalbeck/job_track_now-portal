@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import ExportMenu from '../../components/ExportMenu/ExportMenu';
 import apiService from '../../services/api';
 import {API_BASE_URL} from '../../config';
+import {getAccessToken} from '../../utils/oauth';
 import './Resume.css';
 
 const Resume = () => {
@@ -30,9 +31,8 @@ const Resume = () => {
 
     const fetchJobResumes = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/v1/resume/job`);
-            const data = await response.json();
-            setJobResumes(data || []);
+            const data = await apiService.getJobResumes();
+            setJobResumes(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error('Error fetching job resumes:', error);
             setJobResumes([]);
@@ -41,25 +41,13 @@ const Resume = () => {
 
     const handleClone = async (resumeId, isBaseline = true) => {
         try {
-            const response = await fetch(`${API_BASE_URL}/v1/resume/clone`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({resume_id: resumeId}),
-            });
-
-            if (response.ok) {
-                const newResume = await response.json();
-                // Add the cloned resume to the appropriate list
-                if (isBaseline) {
-                    setBaselineResumes(prev => [...prev, newResume]);
-                } else {
-                    // For job resumes, we need to fetch the updated list to get keyword/focus counts
-                    fetchJobResumes();
-                }
+            const newResume = await apiService.cloneResume(resumeId);
+            // Add the cloned resume to the appropriate list
+            if (isBaseline) {
+                setBaselineResumes(prev => [...prev, newResume]);
             } else {
-                alert('Failed to clone resume');
+                // For job resumes, we need to fetch the updated list to get keyword/focus counts
+                fetchJobResumes();
             }
         } catch (error) {
             console.error('Error cloning resume:', error);
@@ -73,19 +61,12 @@ const Resume = () => {
         }
 
         try {
-            const response = await fetch(`${API_BASE_URL}/v1/resume?resume_id=${resumeId}`, {
-                method: 'DELETE',
-            });
-
-            if (response.ok) {
-                // Remove the deleted resume from the appropriate list
-                if (isBaseline) {
-                    setBaselineResumes(prev => prev.filter(resume => resume.resume_id !== resumeId));
-                } else {
-                    setJobResumes(prev => prev.filter(resume => resume.resume_id !== resumeId));
-                }
+            await apiService.deleteResume(resumeId);
+            // Remove the deleted resume from the appropriate list
+            if (isBaseline) {
+                setBaselineResumes(prev => prev.filter(resume => resume.resume_id !== resumeId));
             } else {
-                alert('Failed to delete resume');
+                setJobResumes(prev => prev.filter(resume => resume.resume_id !== resumeId));
             }
         } catch (error) {
             console.error('Error deleting resume:', error);
@@ -104,8 +85,15 @@ const Resume = () => {
             formData.append('is_default', 'true');
             formData.append('is_baseline', 'true');
 
+            const headers = {};
+            const accessToken = getAccessToken();
+            if (accessToken) {
+                headers['Authorization'] = `Bearer ${accessToken}`;
+            }
+
             const response = await fetch(`${API_BASE_URL}/v1/resume`, {
                 method: 'POST',
+                headers,
                 body: formData,
             });
 
@@ -124,24 +112,9 @@ const Resume = () => {
         }
     };
 
-    const handleEdit = async (resumeId) => {
-        try {
-            // Check if TinyMCE API key is configured
-            const personalInfo = await apiService.getPersonalInfo();
-            const hasTinyMCEKey = personalInfo.tinymce_api_key && personalInfo.tinymce_api_key.trim() !== '';
-
-            if (hasTinyMCEKey) {
-                // Navigate to ManuallyEditResume page with TinyMCE
-                window.location.href = `/manually-edit-resume?resume_id=${resumeId}`;
-            } else {
-                // Navigate to EditResume page for manual HTML editing
-                window.location.href = `/edit-resume?resume_id=${resumeId}`;
-            }
-        } catch (error) {
-            console.error('Error checking TinyMCE API key:', error);
-            // Fallback to manual editing if there's an error
-            window.location.href = `/edit-resume?resume_id=${resumeId}`;
-        }
+    const handleEdit = (resumeId) => {
+        // Navigate to EditResume page for manual HTML editing
+        window.location.href = `/edit-resume?resume_id=${resumeId}`;
     };
 
     const handleTailor = (jobId, baselineResumeId) => {
