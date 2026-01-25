@@ -82,6 +82,13 @@ export function clearOAuthState() {
  */
 export function storeAccessToken(token) {
     localStorage.setItem('access_token', token);
+    // Debug: log token info when stored
+    const payload = decodeJwtPayload(token);
+    if (payload) {
+        const now = Math.floor(Date.now() / 1000);
+        const expiresIn = payload.exp - now;
+        console.log(`Token stored. iat=${payload.iat}, exp=${payload.exp}, now=${now}, expires in ${expiresIn} seconds (${Math.round(expiresIn/3600)} hours)`);
+    }
 }
 
 /**
@@ -157,12 +164,14 @@ export function isTokenExpired(token) {
 export function isAuthenticated() {
     const token = getAccessToken();
     if (!token) {
+        console.log('isAuthenticated: No token found');
         return false;
     }
 
     // Check if token is expired
     if (isTokenExpired(token)) {
         // Clear expired token
+        console.log('isAuthenticated: Token is expired, clearing');
         clearAccessToken();
         return false;
     }
