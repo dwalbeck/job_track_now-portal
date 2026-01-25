@@ -60,14 +60,15 @@ const PrivateRoute = ({ children }) => {
     useEffect(() => {
         const handleFocus = () => {
             // Re-check authentication when user returns to the tab
-            if (!isAuthenticated()) {
+            // But don't interrupt if on /settings/user during first user creation
+            if (!isAuthenticated() && location.pathname !== '/settings/user') {
                 setAllowAccess(false);
             }
         };
 
         window.addEventListener('focus', handleFocus);
         return () => window.removeEventListener('focus', handleFocus);
-    }, []);
+    }, [location.pathname]);
 
     // Show nothing while checking (prevents flash of login page)
     if (checking) {
