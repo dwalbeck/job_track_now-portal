@@ -134,12 +134,20 @@ export function decodeJwtPayload(token) {
 export function isTokenExpired(token) {
     const payload = decodeJwtPayload(token);
     if (!payload || !payload.exp) {
+        console.warn('Token has no exp claim or could not be decoded');
         return true;
     }
     // exp is in seconds, Date.now() is in milliseconds
     const expirationTime = payload.exp * 1000;
     const now = Date.now();
-    return now >= expirationTime;
+    const isExpired = now >= expirationTime;
+
+    if (isExpired) {
+        const expiredAgo = Math.round((now - expirationTime) / 1000);
+        console.warn(`Token expired ${expiredAgo} seconds ago. exp=${payload.exp}, now=${Math.floor(now/1000)}, iat=${payload.iat}`);
+    }
+
+    return isExpired;
 }
 
 /**

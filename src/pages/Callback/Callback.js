@@ -61,9 +61,9 @@ const Callback = () => {
             // Set success status
             setStatus('success');
 
-            // Redirect to home page after short delay
+            // Redirect to Job Tracker page after short delay
             setTimeout(() => {
-                navigate('/');
+                navigate('/job-tracker');
             }, 1500);
 
         } catch (err) {
