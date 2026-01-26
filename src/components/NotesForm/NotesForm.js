@@ -138,7 +138,7 @@ const NotesForm = () => {
             <form onSubmit={handleSubmit} className="notes-form">
                 <input type="hidden" name="note_id" value={formData.note_id}/>
 
-                <div className="form-group">
+                <div className="form-row-inline">
                     <label htmlFor="job_id">Job *</label>
                     <select
                         id="job_id"
@@ -156,7 +156,7 @@ const NotesForm = () => {
                     </select>
                 </div>
 
-                <div className="form-group">
+                <div className="form-row-inline">
                     <label htmlFor="note_title">Note Title *</label>
                     <input
                         type="text"
@@ -169,50 +169,48 @@ const NotesForm = () => {
                     />
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="note_content">Note Content *</label>
+                <div className="form-row-inline">
+                    <label htmlFor="note_content">Note Content</label>
                     <textarea
                         id="note_content"
                         name="note_content"
                         value={formData.note_content}
                         onChange={handleChange}
-                        required
                         rows={5}
                         placeholder="Enter your note content here..."
-                        className="auto-expand"
                     />
                 </div>
 
-                <div className="form-row">
-                    <div className="form-group form-group-small">
-                        <label htmlFor="note_score">Score (1-10)</label>
-                        <input
-                            type="number"
-                            id="note_score"
-                            name="note_score"
-                            value={formData.note_score}
-                            onChange={handleChange}
-                            min="1"
-                            max="10"
-                            placeholder="1-10"
-                        />
-                    </div>
+                <div className="form-row-inline">
+                    <label htmlFor="note_score">Score (1-10)</label>
+                    <input
+                        type="number"
+                        id="note_score"
+                        name="note_score"
+                        value={formData.note_score}
+                        onChange={handleChange}
+                        min="1"
+                        max="10"
+                        placeholder="1-10"
+                        className="score-input"
+                    />
+                </div>
 
-                    <div className="form-group">
-                        <label htmlFor="communication_type">Communication Type</label>
-                        <select
-                            id="communication_type"
-                            name="communication_type"
-                            value={formData.communication_type}
-                            onChange={handleChange}
-                        >
-                            <option value="">Select type</option>
-                            <option value="phone">Phone</option>
-                            <option value="email">Email</option>
-                            <option value="sms">SMS</option>
-                            <option value="message">Message</option>
-                        </select>
-                    </div>
+                <div className="form-row-inline">
+                    <label htmlFor="communication_type">Comm Type</label>
+                    <select
+                        id="communication_type"
+                        name="communication_type"
+                        value={formData.communication_type}
+                        onChange={handleChange}
+                        className="comm-type-select"
+                    >
+                        <option value="">Select type</option>
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                        <option value="sms">SMS</option>
+                        <option value="message">Message</option>
+                    </select>
                 </div>
 
                 <div className="note-form-actions">
