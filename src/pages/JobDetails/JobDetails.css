@@ -330,6 +330,12 @@
   gap: 15px;
 }
 
+.job-details .note-card-row-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 80px;
+  gap: 15px;
+}
+
 .job-details .note-card-field {
   display: flex;
   gap: 8px;

@@ -13,7 +13,9 @@ const NotesForm = () => {
         note_id: '',
         job_id: '',
         note_title: '',
-        note_content: ''
+        note_content: '',
+        note_score: '',
+        communication_type: ''
     });
 
     const [jobs, setJobs] = useState([]);
@@ -54,7 +56,9 @@ const NotesForm = () => {
                     note_id: note.note_id,
                     job_id: note.job_id,
                     note_title: note.note_title,
-                    note_content: note.note_content
+                    note_content: note.note_content,
+                    note_score: note.note_score || '',
+                    communication_type: note.communication_type || ''
                 });
             } else {
                 setError('Note not found');
@@ -83,7 +87,9 @@ const NotesForm = () => {
         try {
             const submitData = {
                 ...formData,
-                job_id: parseInt(formData.job_id)
+                job_id: parseInt(formData.job_id),
+                note_score: formData.note_score ? parseInt(formData.note_score) : null,
+                communication_type: formData.communication_type || null
             };
 
             if (isEdit) {
@@ -175,6 +181,38 @@ const NotesForm = () => {
                         placeholder="Enter your note content here..."
                         className="auto-expand"
                     />
+                </div>
+
+                <div className="form-row">
+                    <div className="form-group form-group-small">
+                        <label htmlFor="note_score">Score (1-10)</label>
+                        <input
+                            type="number"
+                            id="note_score"
+                            name="note_score"
+                            value={formData.note_score}
+                            onChange={handleChange}
+                            min="1"
+                            max="10"
+                            placeholder="1-10"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="communication_type">Communication Type</label>
+                        <select
+                            id="communication_type"
+                            name="communication_type"
+                            value={formData.communication_type}
+                            onChange={handleChange}
+                        >
+                            <option value="">Select type</option>
+                            <option value="phone">Phone</option>
+                            <option value="email">Email</option>
+                            <option value="sms">SMS</option>
+                            <option value="message">Message</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div className="note-form-actions">

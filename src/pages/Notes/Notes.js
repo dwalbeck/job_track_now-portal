@@ -165,6 +165,14 @@ const Notes = () => {
                                         </div>
                                     </div>
 
+                                    <div className="note-score-cell">
+                                        {note.note_score || '-'}
+                                    </div>
+
+                                    <div className="note-comm-type-cell">
+                                        {note.communication_type || '-'}
+                                    </div>
+
                                     <div className="note-timestamp-cell">
                                         <div className="note-created">
                                             {new Date(note.note_created).toLocaleDateString()}

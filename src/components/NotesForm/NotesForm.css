@@ -27,6 +27,19 @@
   flex-direction: column;
 }
 
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-group-small {
+  flex: 0 0 100px;
+}
+
+.form-group-small input {
+  width: 80px;
+}
+
 .form-group label {
   margin-bottom: 8px;
   font-weight: 600;

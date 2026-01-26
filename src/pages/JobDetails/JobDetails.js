@@ -600,7 +600,7 @@ const JobDetails = () => {
                                     className="note-card"
                                     onClick={() => handleNoteClick(note)}
                                 >
-                                    <div className="note-card-row">
+                                    <div className="note-card-row note-card-row-3col">
                                         <div className="note-card-field">
                                             <span className="note-card-label">Created:</span>
                                             <span
@@ -610,11 +610,19 @@ const JobDetails = () => {
                                             <span className="note-card-label">Title:</span>
                                             <span className="note-card-value">{note.note_title}</span>
                                         </div>
+                                        <div className="note-card-field">
+                                            <span className="note-card-label">Score:</span>
+                                            <span className="note-card-value">{note.note_score || '-'}</span>
+                                        </div>
                                     </div>
                                     <div className="note-card-row">
-                                        <div className="note-card-field-full">
+                                        <div className="note-card-field">
                                             <span className="note-card-label">Note:</span>
                                             <span className="note-card-value">{note.note_content}</span>
+                                        </div>
+                                        <div className="note-card-field">
+                                            <span className="note-card-label">Comm Type:</span>
+                                            <span className="note-card-value">{note.communication_type || '-'}</span>
                                         </div>
                                     </div>
                                 </div>
