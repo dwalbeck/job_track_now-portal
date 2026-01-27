@@ -80,15 +80,8 @@ const Notes = () => {
             const response = await apiService.exportNotes();
             const { note_export_file } = response;
 
-            // Trigger file download
-            const fileUrl = `${apiService.baseURL}/v1/files/exports/${note_export_file}`;
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = note_export_file;
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Download file with authentication
+            await apiService.downloadFile(`/v1/files/exports/${note_export_file}`, note_export_file);
 
         } catch (error) {
             console.error('Error exporting notes:', error);

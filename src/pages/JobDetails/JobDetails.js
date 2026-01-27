@@ -271,14 +271,8 @@ const JobDetails = () => {
             const response = await apiService.convertFile(job.resume_id, 'html', 'docx');
             const fileName = response.file;
 
-            // Trigger file download using standardized naming endpoint
-            const downloadUrl = `${apiService.baseURL}/v1/files/resumes/${fileName}`;
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Download file with authentication
+            await apiService.downloadFile(`/v1/files/resumes/${fileName}`, fileName);
         } catch (error) {
             console.error('Error downloading resume:', error);
             alert('Failed to download resume. Please ensure a resume has been created for this job.');

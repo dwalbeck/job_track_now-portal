@@ -47,14 +47,8 @@ const ViewCompanyReport = () => {
             const response = await apiService.downloadCompanyReport(id);
             const filename = response.file_name;
 
-            // Trigger download by creating a link and clicking it
-            const downloadUrl = `${apiService.baseURL}/v1/files/reports/${filename}`;
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Download file with authentication
+            await apiService.downloadFile(`/v1/files/reports/${filename}`, filename);
 
             console.log('Report downloaded successfully');
         } catch (error) {

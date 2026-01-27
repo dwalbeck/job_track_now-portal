@@ -121,6 +121,68 @@ class ApiService {
         }
     }
 
+    /**
+     * Download a file with authentication and trigger browser download
+     * @param {string} endpoint - The file endpoint (e.g., '/v1/files/resumes/file.docx')
+     * @param {string} fileName - The name to save the file as
+     */
+    async downloadFile(endpoint, fileName) {
+        const url = `${API_BASE_URL}${endpoint}`;
+        const startTime = performance.now();
+
+        // Add Authorization header
+        const headers = {};
+        const accessToken = getAccessToken();
+        if (accessToken) {
+            if (isTokenExpired(accessToken)) {
+                logger.warning('Token expired before file download', { endpoint });
+                this.handleAuthFailure();
+                return Promise.reject(new Error('Token expired'));
+            }
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        logger.logAPIRequest('GET', endpoint, null);
+
+        try {
+            const response = await fetch(url, { headers });
+            const duration = performance.now() - startTime;
+            logger.logAPIResponse('GET', endpoint, response.status, duration);
+
+            if (response.status === 401) {
+                logger.warning('Received 401 Unauthorized response during file download', { endpoint });
+                this.handleAuthFailure();
+                const error = new Error('Unauthorized - session expired');
+                error.status = 401;
+                error.isAuthError = true;
+                throw error;
+            }
+
+            if (!response.ok) {
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                error.status = response.status;
+                throw error;
+            }
+
+            // Get the blob and create download link
+            const blob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(blobUrl);
+
+            return { success: true, fileName };
+        } catch (error) {
+            const duration = performance.now() - startTime;
+            logger.logAPIResponse('GET', endpoint, 0, duration);
+            logger.logError(error, `File download from ${endpoint}`);
+            throw error;
+        }
+    }
 
 
     // ***** calendar ***************************************************************************

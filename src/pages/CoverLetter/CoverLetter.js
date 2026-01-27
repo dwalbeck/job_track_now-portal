@@ -64,19 +64,8 @@ const CoverLetter = () => {
             const convertResponse = await apiService.convertLetter(coverId, 'docx');
             const serverFileName = convertResponse.file_name;
 
-            const downloadFileName = 'cover_letter.docx';
-
-            // Download the file with custom filename
-            const fileUrl = `${apiService.baseURL}/v1/files/cover_letters/${serverFileName}`;
-
-            // Create a temporary link element
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = downloadFileName;
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Download file with authentication
+            await apiService.downloadFile(`/v1/files/cover_letters/${serverFileName}`, serverFileName);
 
         } catch (error) {
             console.error('Error downloading cover letter:', error);

@@ -77,15 +77,8 @@ const Calendar = () => {
             const response = await apiService.exportCalendar();
             const { calendar_export_file } = response;
 
-            // Trigger file download
-            const fileUrl = `${apiService.baseURL}/v1/files/exports/${calendar_export_file}`;
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = calendar_export_file;
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            // Download file with authentication
+            await apiService.downloadFile(`/v1/files/exports/${calendar_export_file}`, calendar_export_file);
 
         } catch (error) {
             console.error('Error exporting calendar:', error);
