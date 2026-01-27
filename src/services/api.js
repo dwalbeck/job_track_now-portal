@@ -169,13 +169,24 @@ class ApiService {
             const blobUrl = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = blobUrl;
-            link.download = fileName;
+
+            // Extract filename from Content-Disposition header if available
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let downloadFileName = fileName; // fallback to passed filename
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    downloadFileName = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+
+            link.download = downloadFileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             window.URL.revokeObjectURL(blobUrl);
 
-            return { success: true, fileName };
+            return { success: true, fileName: downloadFileName };
         } catch (error) {
             const duration = performance.now() - startTime;
             logger.logAPIResponse('GET', endpoint, 0, duration);
