@@ -45,17 +45,10 @@ const JobCard = ({job, index, onClick}) => {
 
         // Check if appointment is today
         if (appointmentDate.getTime() === today.getTime()) {
-            // Check if the time has passed
+            // For same-day appointments, always show the time (even if it has passed)
+            // This keeps the interview visible on the card throughout the day
             if (job.start_time) {
-                const now = new Date();
                 const [hours, minutes] = job.start_time.split(':');
-                const appointmentDateTime = new Date();
-                appointmentDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
-
-                if (appointmentDateTime <= now) {
-                    return null; // Time has passed
-                }
-
                 // Format time in 12-hour format with am/pm
                 return `appt ${formatTime12Hour(hours, minutes)}`;
             }

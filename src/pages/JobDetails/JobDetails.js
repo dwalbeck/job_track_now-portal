@@ -18,6 +18,7 @@ const JobDetails = () => {
     const [selectedResumeId, setSelectedResumeId] = useState(null);
     const [showResumeSelect, setShowResumeSelect] = useState(false);
     const [resumeDetail, setResumeDetail] = useState(null);
+    const [hoveredNoteId, setHoveredNoteId] = useState(null);
 
     const statusOptions = ['applied', 'interviewing', 'rejected', 'no response'];
 
@@ -318,7 +319,85 @@ const JobDetails = () => {
     const formatNoteCreated = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
-        return date.toLocaleDateString();
+        return date.toLocaleDateString('en-CA');
+    };
+
+    /**
+     * Calculate how many rows are stacked in the first visual row.
+     * Always displays 2 visual rows max: stacked rows + last row.
+     * Formula:
+     * - If total cards divisible by 3: (total/3) - 1 rows stacked
+     * - Otherwise: floor(total/3) rows stacked
+     */
+    const getStackedRowCount = () => {
+        const totalCards = notes.length;
+        const notesPerRow = 3;
+        if (totalCards <= 6) return 0; // No stacking for 6 or fewer
+
+        if (totalCards % notesPerRow === 0) {
+            return (totalCards / notesPerRow) - 1;
+        } else {
+            return Math.floor(totalCards / notesPerRow);
+        }
+    };
+
+    /**
+     * Get CSS classes for note card based on its position in the stack.
+     * - Cards in stacked rows (first visual row) get overlap classes
+     * - Cards in the last row (second visual row) display normally
+     */
+    const getNoteCardClasses = (index) => {
+        const notesPerRow = 3;
+        const rowIndex = Math.floor(index / notesPerRow);
+        const stackedRowCount = getStackedRowCount();
+
+        let classes = ['note-card'];
+
+        // No stacking needed
+        if (stackedRowCount === 0) {
+            return classes.join(' ');
+        }
+
+        // Check if this card is in the stacked section (first visual row)
+        if (rowIndex < stackedRowCount) {
+            // Cards in rows 1+ need to move up to overlap
+            if (rowIndex > 0) {
+                classes.push('note-stacked');
+            }
+
+            // Cards below the top of the stack can be hovered to bring forward
+            if (rowIndex < stackedRowCount - 1) {
+                classes.push('note-covered');
+            }
+
+            // Top of stack needs margin-bottom for gap before second visual row
+            if (rowIndex === stackedRowCount - 1) {
+                classes.push('note-stack-top');
+            }
+        }
+        // Cards in the last row (second visual row) have no special classes
+
+        return classes.join(' ');
+    };
+
+    /**
+     * Get inline styles for note card (z-index based on row position)
+     */
+    const getNoteCardStyle = (index) => {
+        const notesPerRow = 3;
+        const rowIndex = Math.floor(index / notesPerRow);
+        const stackedRowCount = getStackedRowCount();
+
+        if (stackedRowCount === 0) {
+            return {};
+        }
+
+        // Cards in the stacked section get z-index based on row
+        if (rowIndex < stackedRowCount) {
+            return { zIndex: rowIndex + 1 };
+        }
+
+        return {};
     };
 
     if (loading) {
@@ -584,15 +663,18 @@ const JobDetails = () => {
 
                 <div className="notes-section">
                     <h2 className="page-section-heading">Notes</h2>
-                    <div className="notes-grid">
+                    <div className={`notes-grid ${notes.length > 6 ? 'notes-grid-collapsed' : ''}`}>
                         {notes.length === 0 ? (
                             <div className="no-data">No notes found</div>
                         ) : (
-                            notes.map((note) => (
+                            notes.map((note, index) => (
                                 <div
                                     key={note.note_id}
-                                    className="note-card"
+                                    className={`${getNoteCardClasses(index)}${hoveredNoteId === note.note_id ? ' note-hovered' : ''}`}
+                                    style={getNoteCardStyle(index)}
                                     onClick={() => handleNoteClick(note)}
+                                    onMouseEnter={() => setHoveredNoteId(note.note_id)}
+                                    onMouseLeave={() => setHoveredNoteId(null)}
                                 >
                                     <div className="note-card-row note-card-row-3col">
                                         <div className="note-card-field">
@@ -609,11 +691,13 @@ const JobDetails = () => {
                                             <span className="note-card-value">{note.note_score || '-'}</span>
                                         </div>
                                     </div>
-                                    <div className="note-card-row">
-                                        <div className="note-card-field">
+                                    <div className="note-card-row note-card-row-full">
+                                        <div className="note-card-field-full">
                                             <span className="note-card-label">Note:</span>
                                             <span className="note-card-value">{note.note_content}</span>
                                         </div>
+                                    </div>
+                                    <div className="note-card-row note-card-row-footer">
                                         <div className="note-card-field">
                                             <span className="note-card-label">Comm Type:</span>
                                             <span className="note-card-value">{note.communication_type || '-'}</span>

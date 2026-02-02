@@ -83,6 +83,16 @@
     word-wrap: break-word;
 }
 
+.company-name.clickable {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.company-name.clickable:hover {
+    color: #3498db;
+    text-decoration: underline;
+}
+
 .company-logo {
     height: 50px;
     width: auto;

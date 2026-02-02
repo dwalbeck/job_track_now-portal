@@ -314,15 +314,39 @@
   border-radius: 6px;
   padding: 15px;
   cursor: pointer;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, z-index 0s;
   display: flex;
   flex-direction: column;
   gap: 10px;
   min-height: 150px;
+  position: relative;
 }
 
 .job-details .note-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Collapsed notes grid - when more than 6 notes */
+/* Always shows 2 visual rows: stacked rows (first) + last row (second) */
+.job-details .notes-grid-collapsed {
+  row-gap: 0 !important;
+}
+
+/* Cards in stacked rows (not first row) - move up to overlap previous row */
+/* Note card min-height is 150px, overlap by 110px to leave ~40px visible */
+.job-details .notes-grid-collapsed .note-stacked {
+  margin-top: -110px;
+}
+
+/* Top of the stack - add gap before the second visual row */
+.job-details .notes-grid-collapsed .note-stack-top {
+  margin-bottom: 20px;
+}
+
+/* Covered cards can be hovered to bring them to the front */
+.job-details .notes-grid-collapsed .note-covered.note-hovered {
+  z-index: 100 !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
 }
 
 .job-details .note-card-row {
@@ -344,9 +368,37 @@
 
 .job-details .note-card-field-full {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   flex: 1;
   flex-direction: column;
+  width: 100%;
+}
+
+/* Full-width row for note content - override the flex layout from .note-card-row */
+.job-details .note-card-row.note-card-row-full {
+  display: block !important;
+  width: 100% !important;
+}
+
+.job-details .note-card-row.note-card-row-full .note-card-field-full {
+  display: block !important;
+  width: 100% !important;
+}
+
+.job-details .note-card-row.note-card-row-full .note-card-label {
+  display: block !important;
+  margin-bottom: 4px;
+}
+
+.job-details .note-card-row.note-card-row-full .note-card-value {
+  display: block !important;
+  width: 100% !important;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.job-details .note-card-row-footer {
+  margin-top: auto;
 }
 
 .job-details .note-card-label {

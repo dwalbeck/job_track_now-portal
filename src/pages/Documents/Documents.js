@@ -112,7 +112,12 @@ const Documents = () => {
                             <div key={report.company_id} className="report-card">
                                 <div className="card-row-1">
                                     <div className="company-info">
-                                        <h3 className="company-name">{report.company_name}</h3>
+                                        <h3
+                                            className="company-name clickable"
+                                            onClick={() => navigate(`/company-report/${report.company_id}`)}
+                                        >
+                                            {report.company_name}
+                                        </h3>
                                     </div>
                                     {report.logo_file && (
                                         <img

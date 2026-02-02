@@ -52,3 +52,84 @@
 .column-content.drag-over {
   background-color: #f0f8ff;
 }
+
+/* Post-Interview Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.post-interview-modal {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.post-interview-modal .modal-content {
+  margin-bottom: 20px;
+}
+
+.post-interview-modal .modal-content p {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.post-interview-modal .modal-content p:last-child {
+  margin-bottom: 0;
+  font-weight: 500;
+}
+
+.post-interview-modal .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.post-interview-modal .modal-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.post-interview-modal .modal-btn:hover {
+  transform: translateY(-1px);
+}
+
+.post-interview-modal .modal-btn:active {
+  transform: translateY(0);
+}
+
+.post-interview-modal .dismiss-btn {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.post-interview-modal .dismiss-btn:hover {
+  background-color: #d0d0d0;
+}
+
+.post-interview-modal .score-btn {
+  background-color: #3498db;
+  color: white;
+}
+
+.post-interview-modal .score-btn:hover {
+  background-color: #2980b9;
+}

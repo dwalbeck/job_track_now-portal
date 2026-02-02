@@ -526,11 +526,12 @@ describe('JobCard Component', () => {
                 </DnDWrapper>
             );
 
-            expect(screen.getByText('appt at 15:30')).toBeInTheDocument();
-            expect(screen.getByText('appt at 15:30')).toHaveClass('appointment-reminder');
+            expect(screen.getByText('appt 3:30pm')).toBeInTheDocument();
+            expect(screen.getByText('appt 3:30pm')).toHaveClass('appointment-reminder');
         });
 
-        test('does not display appointment reminder for today when time has passed', () => {
+        test('displays appointment reminder for today even when time has passed', () => {
+            // Same-day appointments should always show the time, keeping the interview visible
             const jobTodayPastAppointment = {
                 ...mockJob,
                 start_date: '2025-03-10',
@@ -543,7 +544,7 @@ describe('JobCard Component', () => {
                 </DnDWrapper>
             );
 
-            expect(screen.queryByText(/appt/)).not.toBeInTheDocument();
+            expect(screen.getByText('appt 10:00am')).toBeInTheDocument();
         });
 
         test('displays appointment reminder with correct styling', () => {
@@ -618,7 +619,7 @@ describe('JobCard Component', () => {
                 </DnDWrapper>
             );
 
-            expect(screen.getByText('appt at 23:59')).toBeInTheDocument();
+            expect(screen.getByText('appt 11:59pm')).toBeInTheDocument();
         });
     });
 });

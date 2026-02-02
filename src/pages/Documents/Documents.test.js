@@ -15,10 +15,6 @@ jest.mock('react-router-dom', () => ({
 // Mock window.confirm
 global.confirm = jest.fn();
 
-// Mock document methods for download
-document.body.appendChild = jest.fn();
-document.body.removeChild = jest.fn();
-
 const mockNavigate = jest.fn();
 
 describe('Documents Component', () => {
@@ -270,7 +266,47 @@ describe('Documents Component', () => {
             const createButton = screen.getByText('Create Report');
             fireEvent.click(createButton);
 
-            expect(mockNavigate).toHaveBeenCalledWith('/company-research');
+            expect(mockNavigate).toHaveBeenCalledWith('/company-research', {
+                state: { from: 'documents' }
+            });
+        });
+    });
+
+    describe('Company Name Click', () => {
+        test('navigates to company report page when company name is clicked', async () => {
+            apiService.getCompanyList.mockResolvedValue(mockCompanyReports);
+
+            render(
+                <BrowserRouter>
+                    <Documents />
+                </BrowserRouter>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByText('Acme Corp')).toBeInTheDocument();
+            });
+
+            const companyName = screen.getByText('Acme Corp');
+            fireEvent.click(companyName);
+
+            expect(mockNavigate).toHaveBeenCalledWith('/company-report/1');
+        });
+
+        test('company name has clickable styling class', async () => {
+            apiService.getCompanyList.mockResolvedValue(mockCompanyReports);
+
+            render(
+                <BrowserRouter>
+                    <Documents />
+                </BrowserRouter>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByText('Acme Corp')).toBeInTheDocument();
+            });
+
+            const companyName = screen.getByText('Acme Corp');
+            expect(companyName).toHaveClass('clickable');
         });
     });
 
@@ -375,6 +411,7 @@ describe('Documents Component', () => {
             apiService.downloadCompanyReport.mockResolvedValue({
                 file_name: 'acme_corp_company_report.docx'
             });
+            apiService.downloadFile.mockResolvedValue();
 
             render(
                 <BrowserRouter>
@@ -391,8 +428,10 @@ describe('Documents Component', () => {
 
             await waitFor(() => {
                 expect(apiService.downloadCompanyReport).toHaveBeenCalledWith(1);
-                expect(document.body.appendChild).toHaveBeenCalled();
-                expect(document.body.removeChild).toHaveBeenCalled();
+                expect(apiService.downloadFile).toHaveBeenCalledWith(
+                    '/v1/files/reports/acme_corp_company_report.docx',
+                    'acme_corp_company_report.docx'
+                );
             });
         });
 
@@ -434,12 +473,14 @@ describe('Documents Component', () => {
 
             await waitFor(() => {
                 expect(screen.getByText('Acme Corp')).toBeInTheDocument();
-                expect(screen.getByText('https://acme.com')).toBeInTheDocument();
-                expect(screen.getByText('Linkedin Link')).toBeInTheDocument();
-                expect(screen.getByText('Technology')).toBeInTheDocument();
-                expect(screen.getByText('San Francisco, CA')).toBeInTheDocument();
-                expect(screen.getByText('2025-01-15')).toBeInTheDocument();
             });
+
+            // Check that company details are displayed
+            expect(screen.getByText('https://acme.com')).toBeInTheDocument();
+            expect(screen.getAllByText('Linkedin Link').length).toBeGreaterThan(0);
+            expect(screen.getByText('Technology')).toBeInTheDocument();
+            expect(screen.getByText('San Francisco, CA')).toBeInTheDocument();
+            expect(screen.getByText('2025-01-15')).toBeInTheDocument();
         });
 
         test('displays logo image when available', async () => {
@@ -456,7 +497,7 @@ describe('Documents Component', () => {
                 expect(logos.length).toBeGreaterThan(0);
                 expect(logos[0]).toHaveAttribute(
                     'src',
-                    'http://localhost:8000/v1/files/logos/acme_logo.png'
+                    'http://api.jobtracknow.com/logo/acme_logo.png'
                 );
             });
         });

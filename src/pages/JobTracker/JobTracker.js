@@ -14,8 +14,106 @@ const JobTracker = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
     const [noResponseWeeks, setNoResponseWeeks] = useState(null);
+    const [postInterviewModal, setPostInterviewModal] = useState(null); // {job, calendar_id, start_time, end_time}
     const {selectJob} = useJob();
     const navigate = useNavigate();
+
+    /**
+     * Formats time from 24-hour string to 12-hour format with am/pm
+     * @param {string} timeStr - Time in "HH:MM" or "HH:MM:SS" format
+     * @returns {string} Formatted time like "2:30 pm"
+     */
+    const formatTime12Hour = (timeStr) => {
+        if (!timeStr) return '';
+        const [hours, minutes] = timeStr.split(':');
+        const hour = parseInt(hours, 10);
+        const suffix = hour >= 12 ? 'pm' : 'am';
+        const hour12 = hour % 12 || 12;
+        return `${hour12}:${minutes} ${suffix}`;
+    };
+
+    /**
+     * Checks if a same-day interview has ended (end_time is in the past)
+     * @param {object} job - Job object with calendar data
+     * @returns {boolean} True if interview ended today
+     */
+    const hasInterviewEndedToday = (job) => {
+        if (!job.start_date || !job.end_time) return false;
+
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0]; // YYYY-MM-DD
+
+        // Check if appointment is today
+        if (job.start_date !== todayStr) return false;
+
+        // Check if end_time has passed
+        const now = new Date();
+        const [hours, minutes] = job.end_time.split(':');
+        const endDateTime = new Date();
+        endDateTime.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
+
+        return now > endDateTime;
+    };
+
+    /**
+     * Gets the key for localStorage to track dismissed interview prompts
+     * @param {number} calendarId - Calendar ID
+     * @param {string} date - Date string
+     * @returns {string} Storage key
+     */
+    const getDismissedKey = (calendarId, date) => `interview_dismissed_${calendarId}_${date}`;
+
+    /**
+     * Checks if an interview prompt was already dismissed today
+     * @param {number} calendarId - Calendar ID
+     * @returns {boolean} True if dismissed
+     */
+    const wasInterviewDismissed = (calendarId) => {
+        const todayStr = new Date().toISOString().split('T')[0];
+        return localStorage.getItem(getDismissedKey(calendarId, todayStr)) === 'true';
+    };
+
+    /**
+     * Marks an interview prompt as dismissed for today
+     * @param {number} calendarId - Calendar ID
+     */
+    const dismissInterview = (calendarId) => {
+        const todayStr = new Date().toISOString().split('T')[0];
+        localStorage.setItem(getDismissedKey(calendarId, todayStr), 'true');
+    };
+
+    /**
+     * Checks for completed same-day interviews and shows the scoring prompt
+     * @param {Array} jobList - List of jobs to check
+     */
+    const checkForCompletedInterviews = (jobList) => {
+        for (const job of jobList) {
+            if (hasInterviewEndedToday(job) && !wasInterviewDismissed(job.calendar_id)) {
+                setPostInterviewModal({
+                    job: job,
+                    calendar_id: job.calendar_id,
+                    start_time: job.start_time,
+                    end_time: job.end_time
+                });
+                break; // Show one at a time
+            }
+        }
+    };
+
+    const handleScoreInterview = () => {
+        if (postInterviewModal) {
+            dismissInterview(postInterviewModal.calendar_id);
+            navigate(`/calendar-form/${postInterviewModal.calendar_id}`);
+            setPostInterviewModal(null);
+        }
+    };
+
+    const handleDismissInterviewPrompt = () => {
+        if (postInterviewModal) {
+            dismissInterview(postInterviewModal.calendar_id);
+            setPostInterviewModal(null);
+        }
+    };
 
     const columns = [
         {id: 'applied', title: 'Applied'},
@@ -99,8 +197,12 @@ const JobTracker = () => {
                 }));
 
                 setJobs(updatedJobs);
+                // Check for completed same-day interviews after a short delay
+                setTimeout(() => checkForCompletedInterviews(updatedJobs), 500);
             } else {
                 setJobs(response || []);
+                // Check for completed same-day interviews after a short delay
+                setTimeout(() => checkForCompletedInterviews(response || []), 500);
             }
         } catch (error) {
             console.error('Error fetching jobs:', error);
@@ -233,6 +335,29 @@ const JobTracker = () => {
                     </div>
                 )}
             </DragDropContext>
+
+            {/* Post-Interview Scoring Modal */}
+            {postInterviewModal && (
+                <div className="modal-overlay">
+                    <div className="post-interview-modal">
+                        <div className="modal-content">
+                            <p>
+                                How did your interview go with <strong>{postInterviewModal.job.company}</strong> that
+                                you had scheduled from {formatTime12Hour(postInterviewModal.start_time)} - {formatTime12Hour(postInterviewModal.end_time)} today?
+                            </p>
+                            <p>Would you like to score it?</p>
+                        </div>
+                        <div className="modal-actions">
+                            <button onClick={handleDismissInterviewPrompt} className="modal-btn dismiss-btn">
+                                No
+                            </button>
+                            <button onClick={handleScoreInterview} className="modal-btn score-btn">
+                                Yes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
