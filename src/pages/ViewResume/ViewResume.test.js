@@ -4,7 +4,6 @@ import '@testing-library/jest-dom';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import ViewResume from './ViewResume';
 import apiService from '../../services/api';
-import { API_BASE_URL } from '../../config';
 
 // Mock dependencies
 jest.mock('../../services/api');
@@ -257,8 +256,9 @@ describe('ViewResume Component', () => {
                 expect(screen.getByText('JavaScript')).toBeInTheDocument();
             });
 
-            expect(screen.getByText('React')).toBeInTheDocument();
-            expect(screen.getByText('TypeScript')).toBeInTheDocument();
+            // React and TypeScript appear in both Keywords and Focus sections
+            expect(screen.getAllByText('React').length).toBeGreaterThan(0);
+            expect(screen.getAllByText('TypeScript').length).toBeGreaterThan(0);
         });
 
         test('displays focus keywords section', async () => {
@@ -304,20 +304,8 @@ describe('ViewResume Component', () => {
     describe('Download Functionality', () => {
         test('downloads resume in different formats', async () => {
             apiService.getResumeDetail.mockResolvedValue(mockResumeDetail);
-            apiService.convertFile.mockResolvedValue({ file_name: 'resume.docx' });
-            apiService.getPersonalInfo.mockResolvedValue({
-                first_name: 'John',
-                last_name: 'Doe'
-            });
-
-            // Mock document methods
-            const mockLink = {
-                click: jest.fn(),
-                setAttribute: jest.fn()
-            };
-            document.createElement = jest.fn(() => mockLink);
-            document.body.appendChild = jest.fn();
-            document.body.removeChild = jest.fn();
+            apiService.convertFile.mockResolvedValue({ file: 'resume.docx' });
+            apiService.downloadFile.mockResolvedValue({ success: true });
 
             renderWithRouter(<ViewResume />);
 
@@ -331,15 +319,18 @@ describe('ViewResume Component', () => {
             await waitFor(() => {
                 expect(apiService.convertFile).toHaveBeenCalledWith(1, 'html', 'docx');
             });
+
+            await waitFor(() => {
+                expect(apiService.downloadFile).toHaveBeenCalledWith(
+                    '/v1/file/download/resume/resume.docx',
+                    'resume.docx'
+                );
+            });
         });
 
         test('disables download buttons while downloading', async () => {
             apiService.getResumeDetail.mockResolvedValue(mockResumeDetail);
             apiService.convertFile.mockImplementation(() => new Promise(() => {})); // Never resolves
-            apiService.getPersonalInfo.mockResolvedValue({
-                first_name: 'John',
-                last_name: 'Doe'
-            });
 
             renderWithRouter(<ViewResume />);
 
@@ -395,7 +386,6 @@ describe('ViewResume Component', () => {
 
         test('navigates to edit page on edit click', async () => {
             apiService.getResumeDetail.mockResolvedValue(mockResumeDetail);
-            apiService.getPersonalInfo.mockResolvedValue({ tinymce_api_key: '' });
 
             renderWithRouter(<ViewResume />);
 
@@ -406,29 +396,7 @@ describe('ViewResume Component', () => {
             const editButton = screen.getByText('Edit');
             fireEvent.click(editButton);
 
-            await waitFor(() => {
-                expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining('/edit-resume'));
-            });
-        });
-
-        test('navigates to TinyMCE editor if API key exists', async () => {
-            apiService.getResumeDetail.mockResolvedValue(mockResumeDetail);
-            apiService.getPersonalInfo.mockResolvedValue({
-                tinymce_api_key: 'test-api-key'
-            });
-
-            renderWithRouter(<ViewResume />);
-
-            await waitFor(() => {
-                expect(screen.getByText('Edit')).toBeInTheDocument();
-            });
-
-            const editButton = screen.getByText('Edit');
-            fireEvent.click(editButton);
-
-            await waitFor(() => {
-                expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining('/manually-edit-resume'));
-            });
+            expect(mockNavigate).toHaveBeenCalledWith('/edit-resume?resume_id=1&job_id=');
         });
 
         test('navigates to compare page on compare click', async () => {
@@ -475,9 +443,8 @@ describe('ViewResume Component', () => {
             });
         });
 
-        test('handles edit navigation error gracefully', async () => {
+        test('edit button navigates to edit resume page', async () => {
             apiService.getResumeDetail.mockResolvedValue(mockResumeDetail);
-            apiService.getPersonalInfo.mockRejectedValue(new Error('API error'));
 
             renderWithRouter(<ViewResume />);
 
@@ -488,10 +455,8 @@ describe('ViewResume Component', () => {
             const editButton = screen.getByText('Edit');
             fireEvent.click(editButton);
 
-            await waitFor(() => {
-                // Should fallback to manual editor on error
-                expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining('/edit-resume'));
-            });
+            // The mock useSearchParams returns resume_id=1 with no job_id
+            expect(mockNavigate).toHaveBeenCalledWith('/edit-resume?resume_id=1&job_id=');
         });
     });
 

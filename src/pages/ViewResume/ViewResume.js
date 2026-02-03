@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import apiService from '../../services/api';
-import {API_BASE_URL} from '../../config';
 import './ViewResume.css';
 
 const ViewResume = () => {
@@ -45,17 +44,9 @@ const ViewResume = () => {
 
             const {file} = convertResult;
 
-            // Create filename from the generated file
+            // Download the file using apiService.downloadFile which includes auth headers
             const downloadFileName = `resume.${format}`;
-
-            // Download the file
-            const downloadUrl = `${API_BASE_URL}/v1/file/download/resume/${file}`;
-            const link = document.createElement('a');
-            link.href = downloadUrl;
-            link.download = downloadFileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            await apiService.downloadFile(`/v1/file/download/resume/${file}`, downloadFileName);
         } catch (error) {
             console.error('Error downloading resume:', error);
             alert('Failed to download resume');
