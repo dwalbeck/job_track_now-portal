@@ -58,7 +58,8 @@ describe('ViewResume Component', () => {
             renderWithRouter(<ViewResume />);
 
             await waitFor(() => {
-                expect(screen.getByText('View Resume')).toBeInTheDocument();
+                // "View Resume" appears both as page title and as tab - use role to find heading
+                expect(screen.getByRole('heading', { name: 'View Resume' })).toBeInTheDocument();
             });
 
             expect(screen.getByText('Edit')).toBeInTheDocument();
@@ -85,9 +86,11 @@ describe('ViewResume Component', () => {
             renderWithRouter(<ViewResume />);
 
             await waitFor(() => {
-                expect(screen.getByText('View Resume')).toBeInTheDocument();
+                // "View Resume" appears both as page title and as tab - use role to find heading
+                expect(screen.getByRole('heading', { name: 'View Resume' })).toBeInTheDocument();
             });
 
+            // Check all tabs exist - "View Resume" tab is checked via the tabs section
             expect(screen.getByText('View Suggestions')).toBeInTheDocument();
             expect(screen.getByText('View Keyword Lists')).toBeInTheDocument();
             expect(screen.getByText('Compare')).toBeInTheDocument();
@@ -146,7 +149,8 @@ describe('ViewResume Component', () => {
             renderWithRouter(<ViewResume />);
 
             await waitFor(() => {
-                expect(screen.getByText('View Resume')).toBeInTheDocument();
+                // "View Resume" appears both as page title and as tab - use role to find heading
+                expect(screen.getByRole('heading', { name: 'View Resume' })).toBeInTheDocument();
             });
 
             expect(screen.queryByText('Compare')).not.toBeInTheDocument();
