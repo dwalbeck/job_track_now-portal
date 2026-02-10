@@ -10,6 +10,8 @@ const GeneralSettings = () => {
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState(null);
     const [userId, setUserId] = useState(null);
+    const [llmOptions, setLlmOptions] = useState([]);
+    const [llmLoading, setLlmLoading] = useState(true);
 
     const [formData, setFormData] = useState({
         docx2html: 'convertapi',
@@ -25,6 +27,9 @@ const GeneralSettings = () => {
         cover_llm: 'gpt-4.1-mini',
         company_llm: 'gpt-5.2',
         tools_llm: 'gpt-4o-mini',
+        culture_llm: 'gpt-4o-mini',
+        question_llm: 'gpt-4o-mini',
+        stt_llm: 'gpt-4o-mini-transcribe',
         openai_api_key: '',
         tinymce_api_key: '',
         convertapi_key: '',
@@ -41,22 +46,32 @@ const GeneralSettings = () => {
         html2pdf: ['weasyprint', 'pdfkit', 'convertapi']
     };
 
-    // LLM options
-    const llmOptions = [
-        'gpt-4.1-mini',
-        'gpt-4o-mini',
-        'gpt-4o',
-        'gpt-4.1',
-        'gpt-5.2',
-        'gpt-5-search-api',
-        'claude-3-haiku',
-        'claude-3-sonnet',
-        'claude-3-opus'
-    ];
-
     useEffect(() => {
         loadSettings();
+        loadLLMModels();
     }, []);
+
+    const loadLLMModels = async () => {
+        try {
+            setLlmLoading(true);
+            const models = await apiService.getLLMModels();
+            setLlmOptions(models);
+        } catch (err) {
+            console.error('Error loading LLM models:', err);
+            setError('Failed to load LLM models. Please check your OpenAI API key in Settings.');
+        } finally {
+            setLlmLoading(false);
+        }
+    };
+
+    // Helper to get LLM options including current value if not in list
+    const getLLMOptionsForField = (fieldName) => {
+        const currentValue = formData[fieldName];
+        if (currentValue && !llmOptions.includes(currentValue)) {
+            return [currentValue, ...llmOptions];
+        }
+        return llmOptions;
+    };
 
     const loadSettings = async () => {
         try {
@@ -91,6 +106,9 @@ const GeneralSettings = () => {
                     cover_llm: settings.cover_llm || 'gpt-4.1-mini',
                     company_llm: settings.company_llm || 'gpt-5.2',
                     tools_llm: settings.tools_llm || 'gpt-4o-mini',
+                    culture_llm: settings.culture_llm || 'gpt-4o-mini',
+                    question_llm: settings.question_llm || 'gpt-4o-mini',
+                    stt_llm: settings.stt_llm || 'gpt-4o-mini-transcribe',
                     openai_api_key: settings.openai_api_key || '',
                     tinymce_api_key: settings.tinymce_api_key || '',
                     convertapi_key: settings.convertapi_key || '',
@@ -278,15 +296,19 @@ const GeneralSettings = () => {
                     <div className="general-settings-column">
                         {/* Large Language Models Section */}
                         <div className="form-section">
-                            <h3 className="section-title">Large Language Models</h3>
+                            <h3 className="section-title">
+                                Large Language Models
+                                {llmLoading && <span className="loading-indicator"> (loading models...)</span>}
+                            </h3>
                             <div className="form-row">
                                 <label>Default LLM</label>
                                 <select
                                     name="default_llm"
                                     value={formData.default_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('default_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>
@@ -297,8 +319,9 @@ const GeneralSettings = () => {
                                     name="resume_extract_llm"
                                     value={formData.resume_extract_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('resume_extract_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>
@@ -309,8 +332,9 @@ const GeneralSettings = () => {
                                     name="job_extract_llm"
                                     value={formData.job_extract_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('job_extract_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>
@@ -321,8 +345,9 @@ const GeneralSettings = () => {
                                     name="rewrite_llm"
                                     value={formData.rewrite_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('rewrite_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>
@@ -333,8 +358,9 @@ const GeneralSettings = () => {
                                     name="cover_llm"
                                     value={formData.cover_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('cover_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>
@@ -345,8 +371,9 @@ const GeneralSettings = () => {
                                     name="company_llm"
                                     value={formData.company_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('company_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>
@@ -357,8 +384,48 @@ const GeneralSettings = () => {
                                     name="tools_llm"
                                     value={formData.tools_llm}
                                     onChange={handleInputChange}
+                                    disabled={llmLoading}
                                 >
-                                    {llmOptions.map(opt => (
+                                    {getLLMOptionsForField('tools_llm').map(opt => (
+                                        <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="form-row">
+                                <label>Culture Report LLM</label>
+                                <select
+                                    name="culture_llm"
+                                    value={formData.culture_llm}
+                                    onChange={handleInputChange}
+                                    disabled={llmLoading}
+                                >
+                                    {getLLMOptionsForField('culture_llm').map(opt => (
+                                        <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="form-row">
+                                <label>Interview LLM</label>
+                                <select
+                                    name="question_llm"
+                                    value={formData.question_llm}
+                                    onChange={handleInputChange}
+                                    disabled={llmLoading}
+                                >
+                                    {getLLMOptionsForField('question_llm').map(opt => (
+                                        <option key={opt} value={opt}>{opt}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="form-row">
+                                <label>Transcribe LLM</label>
+                                <select
+                                    name="stt_llm"
+                                    value={formData.stt_llm}
+                                    onChange={handleInputChange}
+                                    disabled={llmLoading}
+                                >
+                                    {getLLMOptionsForField('stt_llm').map(opt => (
                                         <option key={opt} value={opt}>{opt}</option>
                                     ))}
                                 </select>

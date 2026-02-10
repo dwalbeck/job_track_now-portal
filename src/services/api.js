@@ -640,6 +640,139 @@ class ApiService {
             body: JSON.stringify({job_id: jobId}),
         });
     }
+
+    // ***** interview *************************************************************************
+    async getCompanyCulture(companyId) {
+        console.log('[API] getCompanyCulture called with companyId:', companyId);
+        const result = await this.request(`/v1/company/culture/${companyId}`, {
+            timeout: 120000, // 2 minute timeout for AI culture report generation
+        });
+        console.log('[API] getCompanyCulture result:', result);
+        return result;
+    }
+
+    async createInterviewQuestions(jobId, companyId) {
+        return this.request('/v1/interview/question', {
+            method: 'POST',
+            body: JSON.stringify({
+                job_id: jobId,
+                company_id: companyId
+            }),
+            timeout: 120000, // 2 minute timeout for AI question generation
+        });
+    }
+
+    async getQuestionAudio(interviewId, questionId, isStatement = false) {
+        const url = `${API_BASE_URL}/v1/interview/question/audio`;
+        const startTime = performance.now();
+
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        const accessToken = getAccessToken();
+        if (accessToken) {
+            if (isTokenExpired(accessToken)) {
+                this.handleAuthFailure();
+                return Promise.reject(new Error('Token expired'));
+            }
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        logger.logAPIRequest('POST', '/v1/interview/question/audio', { interviewId, questionId, isStatement });
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    interview_id: interviewId,
+                    question_id: questionId,
+                    statement: isStatement
+                })
+            });
+
+            const duration = performance.now() - startTime;
+            logger.logAPIResponse('POST', '/v1/interview/question/audio', response.status, duration);
+
+            if (response.status === 401) {
+                this.handleAuthFailure();
+                throw new Error('Unauthorized');
+            }
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.blob();
+        } catch (error) {
+            logger.logError(error, 'getQuestionAudio');
+            throw error;
+        }
+    }
+
+    async transcribeAudio(audioBlob, questionId) {
+        const url = `${API_BASE_URL}/v1/interview/transcribe`;
+        const startTime = performance.now();
+
+        const formData = new FormData();
+        formData.append('upload_file', audioBlob, 'recording.webm');
+        formData.append('question_id', questionId);
+
+        const headers = {};
+        const accessToken = getAccessToken();
+        if (accessToken) {
+            if (isTokenExpired(accessToken)) {
+                this.handleAuthFailure();
+                return Promise.reject(new Error('Token expired'));
+            }
+            headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+
+        logger.logAPIRequest('POST', '/v1/interview/transcribe', { questionId });
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers,
+                body: formData
+            });
+
+            const duration = performance.now() - startTime;
+            logger.logAPIResponse('POST', '/v1/interview/transcribe', response.status, duration);
+
+            if (response.status === 401) {
+                this.handleAuthFailure();
+                throw new Error('Unauthorized');
+            }
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            logger.logError(error, 'transcribeAudio');
+            throw error;
+        }
+    }
+
+    async submitInterviewAnswer(interviewId, questionId, answer) {
+        return this.request('/v1/interview/answer', {
+            method: 'POST',
+            body: JSON.stringify({
+                interview_id: interviewId,
+                question_id: questionId,
+                answer: answer
+            }),
+            timeout: 90000, // 90 second timeout for AI answer evaluation
+        });
+    }
+
+    async getInterviewReview(interviewId) {
+        return this.request(`/v1/interview/${interviewId}`, {
+            timeout: 120000, // 2 minute timeout for AI review
+        });
+    }
 }
 
 const apiService = new ApiService();

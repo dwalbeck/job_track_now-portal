@@ -19,6 +19,7 @@ const JobDetails = () => {
     const [showResumeSelect, setShowResumeSelect] = useState(false);
     const [resumeDetail, setResumeDetail] = useState(null);
     const [hoveredNoteId, setHoveredNoteId] = useState(null);
+    const [company, setCompany] = useState(null);
 
     const statusOptions = ['applied', 'interviewing', 'rejected', 'no response'];
 
@@ -29,6 +30,7 @@ const JobDetails = () => {
         fetchNotes();
         fetchContacts();
         fetchBaselineResumes();
+        fetchCompany();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
@@ -122,6 +124,16 @@ const JobDetails = () => {
         } catch (error) {
             console.error('Error fetching baseline resumes:', error);
             setBaselineResumes([]);
+        }
+    };
+
+    const fetchCompany = async () => {
+        try {
+            const data = await apiService.getCompanyByJob(id);
+            setCompany(data);
+        } catch (error) {
+            console.error('Error fetching company:', error);
+            setCompany(null);
         }
     };
 
@@ -257,6 +269,18 @@ const JobDetails = () => {
         navigate(`/company-research?job_id=${id}`, {
             state: { from: 'job-details' }
         });
+    };
+
+    const handleMockInterview = () => {
+        if (!job.resume_id) {
+            alert('Please optimize a resume for this job before starting a mock interview.');
+            return;
+        }
+        if (!company || !company.company_id) {
+            alert('Company information is not available for this job. Please run Company Report first.');
+            return;
+        }
+        navigate(`/interview?job_id=${id}&company_id=${company.company_id}&resume_id=${job.resume_id}`);
     };
 
     const handleOptimizeResume = () => {
@@ -596,6 +620,10 @@ const JobDetails = () => {
                         <button onClick={handleCompanyReport}
                                 className="url-action-button company-report-button">
                             Company Report
+                        </button>
+                        <button onClick={handleMockInterview}
+                                className="url-action-button mock-interview-button">
+                            Mock Interview
                         </button>
                     </div>
                 </div>
