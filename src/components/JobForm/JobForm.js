@@ -20,6 +20,7 @@ const JobForm = () => {
         apply_url: '',
         job_desc: '',
         job_status: 'applied',
+        starred: false,
         date_applied: getTodayDate()
     });
 
@@ -63,6 +64,13 @@ const JobForm = () => {
         setFormData(prev => ({
             ...prev,
             [name]: value
+        }));
+    };
+
+    const handleStarToggle = () => {
+        setFormData(prev => ({
+            ...prev,
+            starred: !prev.starred
         }));
     };
 
@@ -198,6 +206,18 @@ const JobForm = () => {
                                     </option>
                                 ))}
                             </select>
+                        </div>
+
+                        <div className="form-row-inline">
+                            <label>Starred</label>
+                            <div className="star-toggle">
+                                <img
+                                    src={formData.starred ? '/star-on.png' : '/star-off.png'}
+                                    alt={formData.starred ? 'Starred' : 'Not starred'}
+                                    onClick={handleStarToggle}
+                                    className="star-toggle-img"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

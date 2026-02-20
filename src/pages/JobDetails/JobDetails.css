@@ -127,6 +127,12 @@
   flex: 1;
 }
 
+.detail-star-img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
 /* Resume Stats Section */
 .resume-stats-section {
   display: flex;

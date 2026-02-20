@@ -124,15 +124,6 @@
   cursor: not-allowed;
 }
 
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 200px;
-  font-size: 18px;
-  color: #666;
-}
-
 @media (max-width: 768px) {
   .notes-form-container {
     padding: 20px;

@@ -67,11 +67,11 @@ const EditResume = () => {
     };
 
     if (loading) {
-        return <div className="edit-resume loading">Loading resume...</div>;
+        return <div className="loading">Loading resume...</div>;
     }
 
     if (error) {
-        return <div className="edit-resume error">{error}</div>;
+        return <div className="error">{error}</div>;
     }
 
     return (

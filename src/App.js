@@ -25,7 +25,9 @@ import ManuallyEditResume from './pages/ManuallyEditResume/ManuallyEditResume';
 import CoverLetter from './pages/CoverLetter/CoverLetter';
 import CreateCoverLetter from './pages/CreateCoverLetter/CreateCoverLetter';
 import Tools from './pages/Tools/Tools';
-import Interview from './pages/Interview/Interview';
+import Interviews from './pages/Interviews/Interviews';
+import MockInterview from './pages/Interview/MockInterview';
+import InterviewReview from './pages/InterviewReview/InterviewReview';
 import UserSettings from './pages/UserSettings/UserSettings';
 import GeneralSettings from './pages/GeneralSettings/GeneralSettings';
 import JobAnalysis from './pages/JobAnalysis/JobAnalysis';
@@ -86,7 +88,9 @@ const AppContent = () => {
                         <Route path="/cover-letter" element={<PrivateRoute><CoverLetter/></PrivateRoute>}/>
                         <Route path="/create-cover-letter" element={<PrivateRoute><CreateCoverLetter/></PrivateRoute>}/>
                         <Route path="/tools" element={<PrivateRoute><Tools/></PrivateRoute>}/>
-                        <Route path="/interview" element={<PrivateRoute><Interview/></PrivateRoute>}/>
+                        <Route path="/interviews" element={<PrivateRoute><Interviews/></PrivateRoute>}/>
+                        <Route path="/mock-interview" element={<PrivateRoute><MockInterview/></PrivateRoute>}/>
+                        <Route path="/interview-review/:id" element={<PrivateRoute><InterviewReview/></PrivateRoute>}/>
                         <Route path="/job-analysis/:id" element={<PrivateRoute><JobAnalysis/></PrivateRoute>}/>
                         <Route path="/optimized-resume/:id" element={<PrivateRoute><OptimizedResume/></PrivateRoute>}/>
                         <Route path="/company-research" element={<PrivateRoute><CompanyResearch/></PrivateRoute>}/>

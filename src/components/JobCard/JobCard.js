@@ -74,8 +74,16 @@ const JobCard = ({job, index, onClick}) => {
                 >
                     <div className="title-row">
                         <div className="job-title">{job.job_title}</div>
-                        {appointmentText && (
-                            <div className="appointment-reminder">{appointmentText}</div>
+                        {(job.starred || appointmentText) && (
+                            <div className="appointment-reminder">
+                                {job.starred && (
+                                    <img src="/star-on.png" alt="Starred" className="card-star" />
+                                )}
+                                {job.starred && appointmentText && (
+                                    <span className="card-star-spacer"> </span>
+                                )}
+                                {appointmentText && appointmentText}
+                            </div>
                         )}
                     </div>
                     <div className="company-name">{job.company}</div>

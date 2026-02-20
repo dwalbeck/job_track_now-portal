@@ -18,7 +18,7 @@ const Navigation = () => {
         {path: '/resume', label: 'Resume', key: 'resume'},
         {path: '/cover-letter', label: 'Cover Letter', key: 'cover-letter'},
         {path: '/tools', label: 'Tools', key: 'tools'},
-        {path: '/interview', label: 'Interview', key: 'interview'},
+        {path: '/interviews', label: 'Interview', key: 'interviews'},
     ];
 
     const homeSubItems = [

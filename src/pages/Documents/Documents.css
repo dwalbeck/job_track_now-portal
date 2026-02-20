@@ -1,12 +1,9 @@
 .documents-page {
-    padding: 20px;
-}
-
-.documents-page.loading {
     text-align: center;
     padding: 50px;
     font-size: 18px;
     color: #7f8c8d;
+    padding: 20px;
 }
 
 .create-report-btn {

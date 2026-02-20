@@ -71,7 +71,7 @@ const ViewCompanyReport = () => {
         return (
             <div className="view-company-report-container">
                 <h1>View Company Report</h1>
-                <div className="loading-message">Loading company report...</div>
+                <div className="loading">Loading company report...</div>
             </div>
         );
     }

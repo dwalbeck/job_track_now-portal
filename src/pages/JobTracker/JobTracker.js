@@ -88,7 +88,7 @@ const JobTracker = () => {
      */
     const checkForCompletedInterviews = (jobList) => {
         for (const job of jobList) {
-            if (hasInterviewEndedToday(job) && !wasInterviewDismissed(job.calendar_id)) {
+            if (hasInterviewEndedToday(job) && !job.outcome_score && !wasInterviewDismissed(job.calendar_id)) {
                 setPostInterviewModal({
                     job: job,
                     calendar_id: job.calendar_id,
@@ -156,12 +156,12 @@ const JobTracker = () => {
         }
     }, [searchTerm, jobs]);
 
-    const isJobOlderThanThreshold = (lastContact, weeks) => {
-        if (!lastContact || !weeks) return false;
+    const isJobOlderThanThreshold = (lastActivity, weeks) => {
+        if (!lastActivity || !weeks) return false;
 
-        const lastContactDate = new Date(lastContact);
+        const lastActivityDate = new Date(lastActivity);
         const today = new Date();
-        const diffTime = Math.abs(today - lastContactDate);
+        const diffTime = Math.abs(today - lastActivityDate);
         const diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
 
         return diffWeeks >= weeks;
@@ -178,7 +178,7 @@ const JobTracker = () => {
                     // Only check jobs that aren't already in "no response" or "rejected" status
                     if (job.job_status !== 'no response' &&
                         job.job_status !== 'rejected' &&
-                        isJobOlderThanThreshold(job.last_contact, noResponseWeeks)) {
+                        isJobOlderThanThreshold(job.last_activity, noResponseWeeks)) {
 
                         try {
                             // Update job status to "no response"

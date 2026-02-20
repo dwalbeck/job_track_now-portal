@@ -74,7 +74,7 @@ const Documents = () => {
     );
 
     if (loading) {
-        return <div className="documents-page loading">Loading company reports...</div>;
+        return <div className="loading">Loading company reports...</div>;
     }
 
     return (

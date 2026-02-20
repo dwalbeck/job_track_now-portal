@@ -6,20 +6,6 @@
   flex-direction: column;
 }
 
-.edit-resume.loading,
-.edit-resume.error {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-  font-size: 18px;
-  color: #666;
-}
-
-.edit-resume.error {
-  color: #d32f2f;
-}
-
 .edit-resume-header {
   display: flex;
   justify-content: space-between;

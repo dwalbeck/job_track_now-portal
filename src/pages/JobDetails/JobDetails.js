@@ -184,6 +184,17 @@ const JobDetails = () => {
         }
     };
 
+    const handleStarToggle = async () => {
+        try {
+            const updatedJob = {...job, starred: !job.starred};
+            await apiService.updateJob(updatedJob);
+            setJob(updatedJob);
+        } catch (error) {
+            console.error('Error updating starred status:', error);
+            alert('Failed to update starred status');
+        }
+    };
+
     const copyToClipboard = (text, label) => {
         if (!text) {
             alert(`No ${label} available`);
@@ -280,7 +291,7 @@ const JobDetails = () => {
             alert('Company information is not available for this job. Please run Company Report first.');
             return;
         }
-        navigate(`/interview?job_id=${id}&company_id=${company.company_id}&resume_id=${job.resume_id}`);
+        navigate(`/mock-interview?job_id=${id}&company_id=${company.company_id}&resume_id=${job.resume_id}`);
     };
 
     const handleOptimizeResume = () => {
@@ -504,6 +515,18 @@ const JobDetails = () => {
                         <div className="detail-row">
                             <span className="detail-label">Interest Level:</span>
                             <span className="detail-value">{job.interest_level}/10</span>
+                        </div>
+
+                        <div className="detail-row">
+                            <span className="detail-label">Starred:</span>
+                            <span className="detail-value">
+                                <img
+                                    src={job.starred ? '/star-on.png' : '/star-off.png'}
+                                    alt={job.starred ? 'Starred' : 'Not starred'}
+                                    className="detail-star-img"
+                                    onClick={handleStarToggle}
+                                />
+                            </span>
                         </div>
 
                         <div className="detail-row">

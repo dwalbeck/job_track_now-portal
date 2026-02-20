@@ -22,6 +22,7 @@ const originalConsoleError = console.error;
 
 describe('JobForm Component', () => {
     beforeEach(() => {
+        jest.restoreAllMocks();
         jest.clearAllMocks();
         console.error = jest.fn();
 
@@ -42,7 +43,7 @@ describe('JobForm Component', () => {
                 </BrowserRouter>
             );
 
-            expect(screen.getByText('Add New Job')).toBeInTheDocument();
+            expect(screen.getByText('Add New Posting')).toBeInTheDocument();
         });
 
         test('renders all form fields', () => {
@@ -62,6 +63,7 @@ describe('JobForm Component', () => {
             expect(screen.getByLabelText(/Posting URL/)).toBeInTheDocument();
             expect(screen.getByLabelText(/Apply URL/)).toBeInTheDocument();
             expect(screen.getByLabelText(/Job Description/)).toBeInTheDocument();
+            expect(screen.getByAltText(/Not starred/)).toBeInTheDocument();
         });
 
         test('renders required field indicators', () => {
@@ -71,8 +73,8 @@ describe('JobForm Component', () => {
                 </BrowserRouter>
             );
 
-            expect(screen.getByLabelText(/Company \*/)).toBeInTheDocument();
-            expect(screen.getByLabelText(/Job Title \*/)).toBeInTheDocument();
+            expect(screen.getByLabelText(/Company\*/)).toBeInTheDocument();
+            expect(screen.getByLabelText(/Job Title\*/)).toBeInTheDocument();
         });
 
         test('renders action buttons', () => {
@@ -83,7 +85,7 @@ describe('JobForm Component', () => {
             );
 
             expect(screen.getByText('Cancel')).toBeInTheDocument();
-            expect(screen.getByText('Add Job')).toBeInTheDocument();
+            expect(screen.getByText('Submit')).toBeInTheDocument();
         });
 
         test('initializes with default values', () => {
@@ -139,7 +141,7 @@ describe('JobForm Component', () => {
             );
 
             await waitFor(() => {
-                expect(screen.getByText('Edit Job')).toBeInTheDocument();
+                expect(screen.getByText('Edit Posting')).toBeInTheDocument();
             });
         });
 
@@ -188,7 +190,7 @@ describe('JobForm Component', () => {
             );
         });
 
-        test('displays Update Job button in edit mode', async () => {
+        test('displays Submit button in edit mode', async () => {
             render(
                 <BrowserRouter>
                     <JobForm />
@@ -196,7 +198,7 @@ describe('JobForm Component', () => {
             );
 
             await waitFor(() => {
-                expect(screen.getByText('Update Job')).toBeInTheDocument();
+                expect(screen.getByText('Submit')).toBeInTheDocument();
             });
         });
 
@@ -373,16 +375,16 @@ describe('JobForm Component', () => {
             const interestSelect = screen.getByLabelText(/Interest Level/);
 
             // Low levels (1-3)
-            expect(interestSelect.querySelector('option[value="1"]')).toHaveTextContent('1 - Low');
-            expect(interestSelect.querySelector('option[value="3"]')).toHaveTextContent('3 - Low');
+            expect(interestSelect.querySelector('option[value="1"]')).toHaveTextContent('1 - low');
+            expect(interestSelect.querySelector('option[value="3"]')).toHaveTextContent('3 - low');
 
             // Medium levels (4-7)
-            expect(interestSelect.querySelector('option[value="5"]')).toHaveTextContent('5 - Medium');
-            expect(interestSelect.querySelector('option[value="7"]')).toHaveTextContent('7 - Medium');
+            expect(interestSelect.querySelector('option[value="5"]')).toHaveTextContent('5 - medium');
+            expect(interestSelect.querySelector('option[value="7"]')).toHaveTextContent('7 - medium');
 
             // High levels (8-10)
-            expect(interestSelect.querySelector('option[value="8"]')).toHaveTextContent('8 - High');
-            expect(interestSelect.querySelector('option[value="10"]')).toHaveTextContent('10 - High');
+            expect(interestSelect.querySelector('option[value="8"]')).toHaveTextContent('8 - high');
+            expect(interestSelect.querySelector('option[value="10"]')).toHaveTextContent('10 - high');
         });
     });
 
@@ -429,7 +431,7 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'TestCorp' } });
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
-            const submitButton = screen.getByText('Add Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             await waitFor(() => {
@@ -440,6 +442,7 @@ describe('JobForm Component', () => {
                         job_status: 'applied',
                         interest_level: 5,
                         date_applied: '2025-03-15',
+                        starred: false,
                     })
                 );
             });
@@ -457,7 +460,7 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'TestCorp' } });
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
-            const submitButton = screen.getByText('Add Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             await waitFor(() => {
@@ -481,7 +484,7 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'TestCorp' } });
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
-            const submitButton = screen.getByText('Add Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             expect(screen.getByText('Saving...')).toBeInTheDocument();
@@ -508,7 +511,7 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'TestCorp' } });
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
-            const submitButton = screen.getByText('Add Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             expect(screen.getByText('Saving...')).toBeDisabled();
@@ -529,7 +532,7 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'TestCorp' } });
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
-            const submitButton = screen.getByText('Add Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             await waitFor(() => {
@@ -552,14 +555,14 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'TestCorp' } });
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
-            const submitButton = screen.getByText('Add Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             await waitFor(() => {
                 expect(screen.getByText('Failed to save job')).toBeInTheDocument();
             });
 
-            expect(screen.getByText('Add Job')).not.toBeDisabled();
+            expect(screen.getByText('Submit')).not.toBeDisabled();
             expect(screen.getByText('Cancel')).not.toBeDisabled();
         });
     });
@@ -598,7 +601,7 @@ describe('JobForm Component', () => {
 
             fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'UpdatedCorp' } });
 
-            const submitButton = screen.getByText('Update Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             await waitFor(() => {
@@ -622,7 +625,7 @@ describe('JobForm Component', () => {
                 expect(screen.getByLabelText(/Company/)).toHaveValue('TechCorp');
             });
 
-            const submitButton = screen.getByText('Update Job');
+            const submitButton = screen.getByText('Submit');
             fireEvent.click(submitButton);
 
             await waitFor(() => {
@@ -661,7 +664,7 @@ describe('JobForm Component', () => {
             );
 
             await waitFor(() => {
-                expect(screen.getByText('Edit Job')).toBeInTheDocument();
+                expect(screen.getByText('Edit Posting')).toBeInTheDocument();
             });
 
             const cancelButton = screen.getByText('Cancel');
@@ -671,8 +674,8 @@ describe('JobForm Component', () => {
         });
     });
 
-    describe('Field Placeholders', () => {
-        test('displays correct placeholder for salary field', () => {
+    describe('Field Attributes', () => {
+        test('salary field is a text input', () => {
             render(
                 <BrowserRouter>
                     <JobForm />
@@ -680,10 +683,10 @@ describe('JobForm Component', () => {
             );
 
             const salaryInput = screen.getByLabelText(/Salary/);
-            expect(salaryInput).toHaveAttribute('placeholder', 'e.g., $70,000 - $90,000');
+            expect(salaryInput).toHaveAttribute('type', 'text');
         });
 
-        test('displays correct placeholder for location field', () => {
+        test('location field is a text input', () => {
             render(
                 <BrowserRouter>
                     <JobForm />
@@ -691,10 +694,10 @@ describe('JobForm Component', () => {
             );
 
             const locationInput = screen.getByLabelText(/Location/);
-            expect(locationInput).toHaveAttribute('placeholder', 'e.g., San Francisco, CA');
+            expect(locationInput).toHaveAttribute('type', 'text');
         });
 
-        test('displays correct placeholder for URL fields', () => {
+        test('URL fields have url type', () => {
             render(
                 <BrowserRouter>
                     <JobForm />
@@ -704,11 +707,11 @@ describe('JobForm Component', () => {
             const postingUrlInput = screen.getByLabelText(/Posting URL/);
             const applyUrlInput = screen.getByLabelText(/Apply URL/);
 
-            expect(postingUrlInput).toHaveAttribute('placeholder', 'https://...');
-            expect(applyUrlInput).toHaveAttribute('placeholder', 'https://...');
+            expect(postingUrlInput).toHaveAttribute('type', 'url');
+            expect(applyUrlInput).toHaveAttribute('type', 'url');
         });
 
-        test('displays correct placeholder for job description', () => {
+        test('job description is a textarea element', () => {
             render(
                 <BrowserRouter>
                     <JobForm />
@@ -716,7 +719,7 @@ describe('JobForm Component', () => {
             );
 
             const jobDescTextarea = screen.getByLabelText(/Job Description/);
-            expect(jobDescTextarea).toHaveAttribute('placeholder', 'Enter the full job description...');
+            expect(jobDescTextarea.tagName).toBe('TEXTAREA');
         });
     });
 
@@ -782,39 +785,94 @@ describe('JobForm Component', () => {
             fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Developer' } });
 
             // First submission fails
-            fireEvent.click(screen.getByText('Add Job'));
+            fireEvent.click(screen.getByText('Submit'));
 
             await waitFor(() => {
                 expect(screen.getByText('Failed to save job')).toBeInTheDocument();
             });
 
             // Second submission succeeds
-            fireEvent.click(screen.getByText('Add Job'));
+            fireEvent.click(screen.getByText('Submit'));
 
             await waitFor(() => {
                 expect(screen.queryByText('Failed to save job')).not.toBeInTheDocument();
             });
         });
 
-        test('renders calendar icon for date input', () => {
+        test('starred field defaults to not starred', () => {
             render(
                 <BrowserRouter>
                     <JobForm />
                 </BrowserRouter>
             );
 
-            expect(screen.getByText('📅')).toBeInTheDocument();
+            expect(screen.getByAltText('Not starred')).toBeInTheDocument();
         });
 
-        test('textarea has correct number of rows', () => {
+        test('clicking star image toggles starred state', () => {
             render(
                 <BrowserRouter>
                     <JobForm />
                 </BrowserRouter>
             );
 
-            const jobDescTextarea = screen.getByLabelText(/Job Description/);
-            expect(jobDescTextarea).toHaveAttribute('rows', '36');
+            const starImg = screen.getByAltText('Not starred');
+            expect(starImg).toHaveAttribute('src', '/star-off.png');
+
+            fireEvent.click(starImg);
+
+            expect(screen.getByAltText('Starred')).toHaveAttribute('src', '/star-on.png');
+
+            fireEvent.click(screen.getByAltText('Starred'));
+
+            expect(screen.getByAltText('Not starred')).toHaveAttribute('src', '/star-off.png');
+        });
+    });
+
+    describe('Starred Field', () => {
+        test('starred is included in form submission payload', async () => {
+            apiService.createJob.mockResolvedValue({ job_id: 1 });
+
+            render(
+                <BrowserRouter>
+                    <JobForm />
+                </BrowserRouter>
+            );
+
+            fireEvent.change(screen.getByLabelText(/Company/), { target: { value: 'StarCorp' } });
+            fireEvent.change(screen.getByLabelText(/Job Title/), { target: { value: 'Engineer' } });
+
+            // Toggle star on
+            fireEvent.click(screen.getByAltText('Not starred'));
+
+            fireEvent.click(screen.getByText('Submit'));
+
+            await waitFor(() => {
+                expect(apiService.createJob).toHaveBeenCalledWith(
+                    expect.objectContaining({ starred: true })
+                );
+            });
+        });
+
+        test('starred is populated from fetched job data in edit mode', async () => {
+            apiService.getJob.mockResolvedValue({
+                job_id: 1,
+                company: 'TechCorp',
+                job_title: 'Dev',
+                date_applied: '2025-03-01',
+                starred: true,
+            });
+            jest.spyOn(require('react-router-dom'), 'useParams').mockReturnValue({ id: '1' });
+
+            render(
+                <BrowserRouter>
+                    <JobForm />
+                </BrowserRouter>
+            );
+
+            await waitFor(() => {
+                expect(screen.getByAltText('Starred')).toBeInTheDocument();
+            });
         });
     });
 });

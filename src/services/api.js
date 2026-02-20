@@ -773,6 +773,21 @@ class ApiService {
             timeout: 120000, // 2 minute timeout for AI review
         });
     }
+
+    async getInterviewList() {
+        return this.request('/v1/interview/list');
+    }
+
+    async getInterviewQuestionList(interviewId) {
+        return this.request(`/v1/interview/question/list/${interviewId}`);
+    }
+
+    async pollProcess(processId) {
+        return this.request(`/v1/process/poll/${processId}`, {
+            method: 'GET',
+            timeout: 10000
+        });
+    }
 }
 
 const apiService = new ApiService();

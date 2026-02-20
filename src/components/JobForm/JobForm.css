@@ -129,6 +129,18 @@
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
+/* Star toggle */
+.star-toggle {
+    display: flex;
+    align-items: center;
+}
+
+.star-toggle-img {
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+}
+
 /* Form actions */
 .form-actions {
     display: flex;
@@ -174,15 +186,6 @@
 .submit-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-}
-
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    font-size: 18px;
-    color: #666;
 }
 
 @media (max-width: 768px) {

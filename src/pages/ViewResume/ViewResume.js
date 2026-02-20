@@ -183,15 +183,15 @@ const ViewResume = () => {
     };
 
     if (loading) {
-        return <div className="view-resume loading">Loading resume...</div>;
+        return <div className="loading">Loading resume...</div>;
     }
 
     if (error) {
-        return <div className="view-resume error">{error}</div>;
+        return <div className="error">{error}</div>;
     }
 
     if (!resumeDetail) {
-        return <div className="view-resume error">Resume not found</div>;
+        return <div className="error">Resume not found</div>;
     }
 
     return (

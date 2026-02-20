@@ -213,7 +213,7 @@ const CreateCoverLetter = () => {
         <div className="create-cover-letter-container">
             <div className="header-container">
                 <div className="page-title-container">
-                    <button className="back-arrow" onClick={handleBack}>←</button>
+                    <button className="back-button" onClick={handleBack}>←</button>
                     <h1 className="page-title">Create Cover Letter</h1>
                 </div>
                 <div>&nbsp;</div>
