@@ -1,0 +1,88 @@
+.home-header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 12px;
+    padding-bottom: 14px;
+    width: 100%;
+}
+
+.home-title-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-welcome-text {
+    font-size: 15px;
+    color: #555;
+    margin-left: 4px;
+    margin-top: 16px;
+    margin-bottom: 4px;
+    font-style: italic;
+    font-weight: bold;
+}
+
+.job-track-now {
+    height: 52px;
+    margin-left: 80px;
+    margin-bottom: 20px;
+}
+
+.home-logo {
+    width: 90px;
+    height: auto;
+    margin-bottom: 4px;
+    margin-left: 280px;
+}
+
+/* ── Content area ─────────────────────────────────────────────── */
+.home-content {
+    max-width: 100%;
+}
+
+/* ── Section ──────────────────────────────────────────────────── */
+.home-section {
+    margin-bottom: 26px;
+}
+
+.home-section-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin: 0 0 10px 0;
+}
+
+.home-section-body {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #333;
+    overflow: hidden; /* clearfix for floated images */
+}
+
+.p-block {
+    margin: 0;
+    text-indent: 24px;
+    float: none;
+    line-height: 1.5;
+    font-size: 16px;
+}
+
+.home-section-body p.home-p-continued {
+    text-indent: 0;
+}
+
+/* ── Floated images ───────────────────────────────────────────── */
+.home-img-right {
+    float: right;
+    width: 270px;
+    height: auto;
+    margin: 6px;
+    border-radius: 4px;
+}
+
+.home-img-left {
+    float: left;
+    width: 270px;
+    height: auto;
+    margin: 6px;
+    border-radius: 4px;
+}
