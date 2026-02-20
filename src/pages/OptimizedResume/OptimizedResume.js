@@ -494,8 +494,8 @@ const OptimizedResume = () => {
     // Show loading screen while polling
     if (isPolling) {
         return (
-            <div className="optimized-resume">
-                <div className="resume-header">
+            <div className="page">
+                <div className="header-container">
                     <h1 className="page-title">Processing Resume</h1>
                 </div>
                 <div className="loading-container" style={{

@@ -69,7 +69,7 @@ const ContactDetails = () => {
 
     return (
         <div className="contact-details">
-            <div className="contact-details-header">
+            <div className="header-container">
                 <div className="header-left">
                     <button onClick={handleGoBack} className="back-button">
                         ←

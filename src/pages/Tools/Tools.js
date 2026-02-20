@@ -67,7 +67,7 @@ const Tools = () => {
     };
 
     return (
-        <div className="tools-container">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Tools</h1>
             </div>

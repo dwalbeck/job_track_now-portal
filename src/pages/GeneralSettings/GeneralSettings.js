@@ -171,8 +171,8 @@ const GeneralSettings = () => {
     }
 
     return (
-        <div className="general-settings-page">
-            <div className="general-settings-header">
+        <div className="page">
+            <div className="header-container">
                 <h1 className="page-title">General Settings</h1>
             </div>
 

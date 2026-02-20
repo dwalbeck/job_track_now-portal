@@ -1,13 +1,3 @@
-.create-cover-letter-container {
-  padding: 20px;
-  width: 100%;
-}
-
-.page-title-container {
-    display: flex;
-    flex-direction: row;
-}
-
 .create-cover-letter-content {
   display: grid;
   grid-template-columns: 1fr 1fr;

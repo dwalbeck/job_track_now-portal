@@ -270,7 +270,7 @@ const JobTracker = () => {
     };
 
     return (
-        <div className="job-tracker">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Job Posting</h1>
                 <div className="header-controls">

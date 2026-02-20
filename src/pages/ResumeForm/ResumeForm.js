@@ -235,7 +235,7 @@ const ResumeForm = () => {
     };
 
     return (
-        <div className="resume-form-page">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">{isEdit ? 'Modify Resume' : 'Add New Resume'}</h1>
             </div>

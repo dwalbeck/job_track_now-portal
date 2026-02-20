@@ -69,7 +69,7 @@ const ViewCompanyReport = () => {
 
     if (loading) {
         return (
-            <div className="view-company-report-container">
+            <div className="page">
                 <h1>View Company Report</h1>
                 <div className="loading">Loading company report...</div>
             </div>
@@ -77,8 +77,8 @@ const ViewCompanyReport = () => {
     }
 
     return (
-        <div className="view-company-report-container">
-            <div className="header-section">
+        <div className="page">
+            <div className="header-container">
                 <div className="header-left">
                     <button onClick={handleGoBack} className="back-button">
                         ←

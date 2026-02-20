@@ -240,7 +240,7 @@ const CompanyResearch = () => {
     };
 
     return (
-        <div className="company-research-container">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Company Research</h1>
             </div>

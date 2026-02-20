@@ -96,7 +96,7 @@ const Notes = () => {
     };
 
     return (
-        <div className="notes-page">
+        <div className="page">
             <div className="header-container">
                 <div className="header-left">
                     {selectedJobId && (

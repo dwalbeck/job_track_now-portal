@@ -103,8 +103,8 @@ const JobForm = () => {
     }
 
     return (
-        <div className="job-form-page">
-            <div className="job-form-header">
+        <div className="page">
+            <div className="header-container">
                 <h1 className="page-title">{isEdit ? 'Edit Posting' : 'Add New Posting'}</h1>
             </div>
 

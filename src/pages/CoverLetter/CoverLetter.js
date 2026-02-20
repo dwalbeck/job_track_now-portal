@@ -101,11 +101,11 @@ const CoverLetter = () => {
     };
 
     if (loading) {
-        return <div className="cover-letter-container">Loading...</div>;
+        return <div className="page">Loading...</div>;
     }
 
     return (
-        <div className="cover-letter-container">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Cover Letter</h1>
                 <div className="cover-letter-actions">

@@ -78,7 +78,7 @@ const Documents = () => {
     }
 
     return (
-        <div className="documents-page">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Documents</h1>
                 <div className="header-controls">

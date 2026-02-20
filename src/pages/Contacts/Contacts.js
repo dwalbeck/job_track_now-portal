@@ -113,7 +113,7 @@ const Contacts = () => {
     };
 
     return (
-        <div className="contacts-page">
+        <div className="page">
             <div className="header-container">
                 <div className="header-left">
                     {selectedJobId && (

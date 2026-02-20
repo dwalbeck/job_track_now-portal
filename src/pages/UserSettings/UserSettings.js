@@ -203,8 +203,8 @@ const UserSettings = () => {
     }
 
     return (
-        <div className="user-settings-page">
-            <div className="user-settings-header">
+        <div className="page">
+            <div className="header-container">
                 <h1 className="page-title">{isNewUser ? 'Create Account' : 'User Information'}</h1>
             </div>
 

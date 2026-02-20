@@ -1,16 +1,3 @@
-.general-settings-page {
-    padding: 20px;
-}
-
-.general-settings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #c2c2c2;
-}
-
 .general-settings-loading {
     display: flex;
     justify-content: center;

@@ -229,7 +229,7 @@ const InterviewReview = () => {
 
     if (loading) {
         return (
-            <div className="interview-review-page">
+            <div className="page">
                 <div className="header-container">
                     <div className="page-title-container">
                         <button className="back-button" onClick={handleBack}>←</button>
@@ -246,7 +246,7 @@ const InterviewReview = () => {
 
     if (error) {
         return (
-            <div className="interview-review-page">
+            <div className="page">
                 <div className="header-container">
                     <div className="page-title-container">
                         <button className="back-button" onClick={handleBack}>←</button>
@@ -264,7 +264,7 @@ const InterviewReview = () => {
     }
 
     return (
-        <div className="interview-review-page">
+        <div className="page">
             <div className="header-container">
                 <div className="page-title-container">
                     <button className="back-button" onClick={handleBack}>←</button>

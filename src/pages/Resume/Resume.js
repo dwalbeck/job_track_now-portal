@@ -183,11 +183,11 @@ const Resume = () => {
     );
 
     if (loading) {
-        return <div className="resume-page loading">Loading resumes...</div>;
+        return <div className="resume-page-loading">Loading resumes...</div>;
     }
 
     return (
-        <div className="resume-page">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Resume</h1>
                 <div className="header-controls">

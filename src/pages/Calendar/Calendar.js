@@ -120,7 +120,7 @@ const Calendar = () => {
     };
 
     return (
-        <div className="calendar-page">
+        <div className="page">
             <div className="header-container">
                 <div className="header-left">
                     {selectedJobId && (

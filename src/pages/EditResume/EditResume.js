@@ -75,8 +75,8 @@ const EditResume = () => {
     }
 
     return (
-        <div className="edit-resume">
-            <div className="edit-resume-header">
+        <div className="page">
+            <div className="header-container">
                 <div className="header-left">
                     <button onClick={handleGoBack} className="back-button">
                         ←

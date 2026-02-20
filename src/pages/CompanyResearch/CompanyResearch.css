@@ -1,14 +1,3 @@
-.company-research-container {
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.company-research-container h1 {
-    color: #333;
-    margin-bottom: 20px;
-}
-
 .content-wrapper {
     display: flex;
     gap: 30px;

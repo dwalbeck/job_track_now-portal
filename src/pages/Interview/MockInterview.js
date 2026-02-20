@@ -1241,7 +1241,7 @@ const MockInterview = () => {
     // Render preparation state
     if (interviewState === STATES.PREPARING) {
         return (
-            <div className="interview-container">
+            <div className="page">
                 <div className="header-container">
                     <h1 className="page-title">Mock Interview</h1>
                 </div>

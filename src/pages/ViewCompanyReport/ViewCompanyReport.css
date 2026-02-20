@@ -1,21 +1,3 @@
-.view-company-report-container {
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-    height: calc(100vh - 80px);
-    display: flex;
-    flex-direction: column;
-}
-
-.header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #e0e0e0;
-}
-
 .header-left {
     display: flex;
     align-items: center;

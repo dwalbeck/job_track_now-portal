@@ -210,9 +210,9 @@ const CreateCoverLetter = () => {
     }
 
     return (
-        <div className="create-cover-letter-container">
+        <div className="page">
             <div className="header-container">
-                <div className="page-title-container">
+                <div className="page-title">
                     <button className="back-button" onClick={handleBack}>←</button>
                     <h1 className="page-title">Create Cover Letter</h1>
                 </div>

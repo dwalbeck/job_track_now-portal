@@ -81,8 +81,8 @@ const ManuallyEditResume = () => {
     }
 
     return (
-        <div className="manually-edit-resume">
-            <div className="edit-resume-header">
+        <div className="page">
+            <div className="header-container">
                 <div className="header-left">
                     <button onClick={handleCancel} className="back-button">
                         ←

@@ -448,7 +448,7 @@ const JobDetails = () => {
     }
 
     return (
-        <div className="job-details">
+        <div className="page">
             <div className="header-container">
                 <div className="header-left">
                     <button onClick={handleGoBack} className="back-button">

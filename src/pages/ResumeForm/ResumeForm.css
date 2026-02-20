@@ -1,15 +1,3 @@
-.resume-form-page {
-  padding: 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.resume-form-page h1 {
-  margin-bottom: 30px;
-  font-size: 28px;
-  color: #333;
-}
-
 .resume-form-container {
   display: flex;
   gap: 40px;

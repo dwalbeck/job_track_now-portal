@@ -452,7 +452,7 @@ const JobAnalysis = () => {
     const regularKeywords = keywords.filter(kw => kw.type === 'keyword');
 
     return (
-        <div className="job-analysis">
+        <div className="page">
             <div className="header-container">
                 <h1 className="page-title">Job Description Analysis</h1>
             </div>
